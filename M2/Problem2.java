@@ -20,10 +20,14 @@ public class Problem2 {
         String totalOutput = "";
         //hint: use the arr variable; don't diretly use the a1-a4 variables
         //TODO add/edit code here
-       
+        System.out.println("Adding values to total variable");
+        for (double num : arr) {
+            total += num;
+        }
         //set the double to a string variable
         //TODO ensure rounding is to two decimal places (i.e., 0.10, 0.01, 1.00)
-        totalOutput = total+"";
+        System.out.println("Displaying output as two decimal places:");
+        totalOutput = String.format("%.2f", total);
         //end add/edit section
         System.out.println("Total is " + totalOutput);
         System.out.println("End process");
