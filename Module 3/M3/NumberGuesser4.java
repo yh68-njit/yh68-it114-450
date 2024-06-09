@@ -17,6 +17,8 @@ public class NumberGuesser4 {
     private Random random = new Random();
     private String fileName = "ng4.txt";
     private String[] fileHeaders = { "Level", "Strikes", "Number", "MaxLevel" };// used for demo readability
+    private String username = "";
+
 
     private void saveState() {
         String[] data = { level + "", strikes + "", number + "", maxLevel + "" };
@@ -135,10 +137,19 @@ public class NumberGuesser4 {
             if (strikes >= maxStrikes) {
                 lose();
                 pickNewRandom = true;
+            } 
+            // Ucid: yh68 Date: 06/09/2024
+            else {
+                if (guess < number) {
+                    System.out.println("Psst... It's higher.");
+                } else {
+                    System.out.println("Psst... It's lower.");
+                }
             }
         }
         saveState();
     }
+    
 
     private int strToNum(String message) {
         int guess = -1;
@@ -151,10 +162,18 @@ public class NumberGuesser4 {
         }
         return guess;
     }
+// Ucid: yh68 Date: 06/09/2024
+    private void setFileName(String username) {
+        this.username = username;
+        this.fileName = username + "-ng4.txt";
+    }
 
     public void start() {
-        try (Scanner input = new Scanner(System.in);) {
+        try (Scanner input = new Scanner(System.in)) {
             System.out.println("Welcome to NumberGuesser4.0");
+            System.out.println("What's your name?");
+            username = input.nextLine().trim();
+            setFileName(username);
             System.out.println("To exit, type the word 'quit'.");
             loadState();
             do {
