@@ -1,8 +1,8 @@
 package Module4.Part3HW;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -128,7 +128,7 @@ public class Client {
             while (isRunning && isConnected()) {
                 String fromServer = (String) in.readObject(); // blocking read
                 if (fromServer != null) {
-                    System.out.println("(Server)" + fromServer);
+                    System.out.println("(Server) " + fromServer);
                 } else {
                     System.out.println("Server disconnected");
                     break;
@@ -147,6 +147,7 @@ public class Client {
         }
         System.out.println("listenToServer thread stopped");
     }
+    
 
     /**
      * Listens for keyboard input from the user

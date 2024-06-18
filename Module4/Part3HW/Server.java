@@ -3,7 +3,10 @@ package Module4.Part3HW;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Server {
     private int port = 3000;
@@ -11,6 +14,9 @@ public class Server {
     // Use ConcurrentHashMap for thread-safe client management
     private final ConcurrentHashMap<Long, ServerThread> connectedClients = new ConcurrentHashMap<>();
     private boolean isRunning = true;
+    private boolean isGameActive = false;
+    private int targetNumber = -1;
+
 
     private void start(int port) {
         this.port = port;
@@ -107,22 +113,82 @@ public class Server {
      * @param sender
      * @return true if it was a command, false otherwise
      */
+    // yh68 6/17/2024
     private boolean processCommand(String message, ServerThread sender) {
-        if(sender == null){
+        if (sender == null) {
             return false;
         }
         System.out.println("Checking command: " + message);
-        // disconnect
+    
         if ("/disconnect".equalsIgnoreCase(message)) {
             ServerThread removedClient = connectedClients.get(sender.getClientId());
             if (removedClient != null) {
-                disconnect(removedClient);
+                this.disconnect(removedClient);
             }
             return true;
+        } else if ("/start".equalsIgnoreCase(message)) {
+            this.startGame();
+            return true;
+        } else if ("/stop".equalsIgnoreCase(message)) {
+            this.stopGame();
+            return true;
+        } else if (message.startsWith("/guess ")) {
+            this.processGuess(message, sender);
+            return true;
+        } else if (message.startsWith("/randomize ")) {
+            String text = message.substring("/randomize ".length());
+            String randomizedMessage = randomize(text);
+            this.relay(randomizedMessage, sender);
+            return true;
         }
-        // add more "else if" as needed
+    
         return false;
     }
+    
+
+    private String randomize(String message) {
+        List<String> characters = List.of(message.split(""));
+        Collections.shuffle(characters);
+        StringBuilder randomizedMessage = new StringBuilder();
+        for (String character : characters) {
+            randomizedMessage.append(character);
+        }
+        return randomizedMessage.toString();
+    }
+    
+    
+    
+    private void startGame() {
+    isGameActive = true;
+    targetNumber = ThreadLocalRandom.current().nextInt(1, 101);
+    relay("Game started! Guess a number between 1 and 100.", null);
+}
+
+private void stopGame() {
+    isGameActive = false;
+    relay("Game stopped.", null);
+}
+
+private void processGuess(String message, ServerThread sender) {
+    if (!isGameActive) {
+        sender.send("The game is not active. Please start the game first.");
+        return;
+    }
+
+    try {
+        int guess = Integer.parseInt(message.split(" ")[1]);
+        String resultMessage = String.format("User[%s] guessed %d but it was not correct.", sender.getClientId(), guess);
+
+        if (guess == targetNumber) {
+            resultMessage = String.format("User[%s] guessed %d and it was correct!", sender.getClientId(), guess);
+            stopGame();
+        }
+
+        relay(resultMessage, null);
+    } catch (NumberFormatException e) {
+        sender.send("Invalid guess. Please enter a number.");
+    }
+}
 
     public static void main(String[] args) {
         System.out.println("Server Starting");
