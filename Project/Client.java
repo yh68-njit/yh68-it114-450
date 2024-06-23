@@ -63,6 +63,7 @@ public enum Client {
      * @param port
      * @return true if connection was successful
      */
+    // yh68 6/22/2024
     private boolean connect(String address, int port) {
         try {
             server = new Socket(address, port);
@@ -236,6 +237,7 @@ public enum Client {
      * 
      * @param p
      */
+    // yh68 6/23/2024
     private void send(Payload p) {
         try {
             out.writeObject(p);
@@ -260,6 +262,7 @@ public enum Client {
     /**
      * Listens for messages from the server
      */
+    // yh68 6/23/2024
     private void listenToServer() {
         try {
             while (isRunning && isConnected()) {
@@ -289,6 +292,7 @@ public enum Client {
     /**
      * Listens for keyboard input from the user
      */
+    // yh68 6/22/2024
     private void listenToInput() {
         try (Scanner si = new Scanner(System.in)) {
             System.out.println("Waiting for input"); // moved here to avoid console spam
