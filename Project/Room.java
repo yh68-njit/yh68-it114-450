@@ -1,6 +1,8 @@
 package Project;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Room implements AutoCloseable{
     private String name;// unique name of the Room
@@ -181,6 +183,7 @@ public class Room implements AutoCloseable{
      * @param sender  ServerThread (client) sending the message or null if it's a
      *                server-generated message
      */
+    // yh68 7/5/24
     protected synchronized void sendMessage(ServerThread sender, String message) {
         if (!isRunning) { // block action if Room isn't running
             return;
@@ -189,13 +192,16 @@ public class Room implements AutoCloseable{
         // Note: any desired changes to the message must be done before this section
         long senderId = sender == null ? ServerThread.DEFAULT_CLIENT_ID : sender.getClientId();
 
+        final String formattedMessage = processMessageFormat(message);
+
+
         // loop over clients and send out the message; remove client if message failed
         // to be sent
         // Note: this uses a lambda expression for each item in the values() collection,
         // it's one way we can safely remove items during iteration
-        info(String.format("sending message to %s recipients: %s", getName(), clientsInRoom.size(), message));
+        info(String.format("sending message to %s recipients", getName())); // <-- Remove this line to omit recipient count from logging
         clientsInRoom.values().removeIf(client -> {
-            boolean failedToSend = !client.sendMessage(senderId, message);
+            boolean failedToSend = !client.sendMessage(senderId, formattedMessage);
             if (failedToSend) {
                 info(String.format("Removing disconnected client[%s] from list", client.getClientId()));
                 disconnect(client);
@@ -203,8 +209,50 @@ public class Room implements AutoCloseable{
             return failedToSend;
         });
     }
-    // end send data to client(s)
 
+    //yh68 7/7/24
+    private String processMessageFormat(String message) {
+        String boldPattern = "\\*\\*(.*?)\\*\\*";
+        String italicPattern = "\\*(.*?)\\*";
+        String underlinePattern = "_(.*?)_";
+        String colorPattern = "#(r|g|b|[0-9a-fA-F]{6}) (.*?) \\1#";
+
+        message = message.replaceAll(boldPattern, "<b>$1</b>");
+
+        message = message.replaceAll(italicPattern, "<i>$1</i>");
+
+        message = message.replaceAll(underlinePattern, "<u>$1</u>");
+
+        Pattern pattern = Pattern.compile(colorPattern);
+        Matcher matcher = pattern.matcher(message);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            String colorCode = matcher.group(1);
+            String coloredText = matcher.group(2);
+            String colorTag;
+            switch (colorCode.toLowerCase()) {
+                case "r":
+                    colorTag = "red";
+                    break;
+                case "g":
+                    colorTag = "green";
+                    break;
+                case "b":
+                    colorTag = "blue";
+                    break;
+                default:
+                    colorTag = "#" + colorCode;
+                    break;
+            }
+            matcher.appendReplacement(sb, "<span style=\"color:" + colorTag + "\">" + coloredText + "</span>");
+        }
+        matcher.appendTail(sb);
+
+        return sb.toString();
+    }
+
+    // end send data to client(s)
+    // yh68 6/23/2024
     // receive data from ServerThread
     protected void handleCreateRoom(ServerThread sender, String room) {
         if (Server.INSTANCE.createRoom(room)) {
