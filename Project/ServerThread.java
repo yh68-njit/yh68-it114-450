@@ -82,6 +82,7 @@ public class ServerThread extends BaseServerThread {
         super.disconnect();
     }
     // handle received message from the Client
+    // yh68 7/5/2024
     @Override
     protected void processPayload(Payload payload) {
         try {
@@ -102,6 +103,9 @@ public class ServerThread extends BaseServerThread {
                 case DISCONNECT:
                     currentRoom.disconnect(this);
                     break;
+                case ROLL:
+                    currentRoom.sendMessage(this, payload.getMessage());
+                    break;
                 default:
                     break;
             }
@@ -110,6 +114,7 @@ public class ServerThread extends BaseServerThread {
             e.printStackTrace();
         }
     }
+    
 
     // send methods to pass data back to the Client
 
@@ -173,6 +178,7 @@ public class ServerThread extends BaseServerThread {
      * @param clientName their name
      * @return success of sending the payload
      */
+    // yh68 6/23/2024
     public boolean sendDisconnect(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.DISCONNECT);

@@ -51,6 +51,7 @@ public enum Server {
     /**
      * Gracefully disconnect clients
      */
+    // yh68 6/23/2024
     private void shutdown() {
         try {
             //chose removeIf over forEach to avoid potential ConcurrentModificationException
@@ -87,6 +88,7 @@ public enum Server {
      * @param name Unique name of the room
      * @return true if it was created and false if it wasn't
      */
+    // yh68 6/23/2024
     protected boolean createRoom(String name) {
         final String nameCheck = name.toLowerCase();
         if (rooms.containsKey(nameCheck)) {

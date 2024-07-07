@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -38,6 +39,8 @@ public enum Client {
     private final String LOGOFF = "logoff";
     private final String LOGOUT = "logout";
     private final String SINGLE_SPACE = " ";
+    private final Pattern rollSingle = Pattern.compile("/roll\\s+(\\d+)");
+    private final Pattern rollMulti = Pattern.compile("/roll\\s+(\\d+)d(\\d+)");
 
     // needs to be private now that the enum logic is handling this
     private Client() {
@@ -126,6 +129,12 @@ public enum Client {
             connect(parts[0].trim(), Integer.parseInt(parts[1].trim()));
             sendClientName();
             return true;
+        } else if (text.startsWith("/roll")) {
+            processRollCommand(text);
+            return true;
+        } else if (text.equalsIgnoreCase("/flip")) {
+            processFlipCommand();
+            return true;
         } else if ("/quit".equalsIgnoreCase(text)) {
             close();
             return true;
@@ -171,14 +180,74 @@ public enum Client {
         }
         return false;
     }
+    // yh68 7/5/24
+    private void processRollCommand(String text) {
+        Matcher singleMatcher = rollSingle.matcher(text);
+        Matcher multiMatcher = rollMulti.matcher(text);
+    
+        if (singleMatcher.matches()) {
+            int max = Integer.parseInt(singleMatcher.group(1));
+            sendRoll(1, max);
+        } else if (multiMatcher.matches()) {
+            int numberOfRolls = Integer.parseInt(multiMatcher.group(1));
+            int diceSides = Integer.parseInt(multiMatcher.group(2));
+            sendRoll(numberOfRolls, diceSides);
+        } else {
+            System.out.println("Invalid roll command format");
+        }
+    }
+    
+    // yh68 7/6/24
+    private void processFlipCommand() {
+        String result = new Random().nextBoolean() ? "heads" : "tails";
+        String message = String.format("%s flipped a coin and got %s", myData.getClientName(), result);
+        System.out.println(message);
+        sendMessage(message);
+    }
 
     // send methods to pass data to the ServerThread
+
+    /**
+    * Sends a roll command with specified number of rolls and dice sides
+     * 
+    * @param numberOfRolls
+    * @param diceSides
+    */
+    private void sendRoll(int numberOfRolls, int diceSides) {
+        if (numberOfRolls <= 0 || diceSides <= 0) {
+            System.out.println("Invalid roll parameters");
+            return;
+        }
+    
+        Random random = new Random();
+        String clientName = myData.getClientName();
+    
+        if (numberOfRolls == 1) {
+            int result = random.nextInt(diceSides) + 1;
+            String message = String.format("%s rolled %d and got %d", clientName, diceSides, result);
+            System.out.println(message);
+            Payload p = new Payload();
+            p.setPayloadType(PayloadType.ROLL);
+            p.setMessage(message);
+            send(p);
+        } else {
+            RollPayload rollPayload = new RollPayload(numberOfRolls, diceSides);
+            rollPayload.setPayloadType(PayloadType.ROLL);
+            int result = rollPayload.rollDice();
+            String message = String.format("%s rolled %dd%d and got %d", clientName, numberOfRolls, diceSides, result);
+            System.out.println(message);
+            rollPayload.setMessage(message);
+            send(rollPayload);
+        }
+    }
+    
 
     /**
      * Sends the room name we intend to create
      * 
      * @param room
      */
+    // yh68 6/23/2024
     private void sendCreateRoom(String room) {
         Payload p = new Payload();
         p.setPayloadType(PayloadType.ROOM_CREATE);
@@ -201,6 +270,7 @@ public enum Client {
     /**
      * Tells the server-side we want to disconnect
      */
+    // yh68 6/23/2024
     private void sendDisconnect() {
         Payload p = new Payload();
         p.setPayloadType(PayloadType.DISCONNECT);
