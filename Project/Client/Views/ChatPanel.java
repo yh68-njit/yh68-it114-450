@@ -1,0 +1,293 @@
+package Project.Client.Views;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import Project.Client.CardView;
+import Project.Client.Client;
+import Project.Client.Interfaces.ICardControls;
+import Project.Common.LoggerUtil;
+
+/**
+ * ChatPanel represents the main chat interface where messages can be sent and
+ * received.
+ */
+// yh68 7/22/24
+public class ChatPanel extends JPanel {
+    private JPanel chatArea = null;
+    private UserListPanel userListPanel;
+    private final float CHAT_SPLIT_PERCENT = 0.7f;
+
+    private JTextField textValue;
+    private JButton button;
+
+    /**
+     * Constructor to create the ChatPanel UI.
+     * 
+     * @param controls The controls to manage card transitions.
+     */
+    public ChatPanel(ICardControls controls) {
+        super(new BorderLayout(10, 10));
+
+        JPanel chatContent = new JPanel(new GridBagLayout());
+        chatContent.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        // Wraps a viewport to provide scroll capabilities
+        JScrollPane scroll = new JScrollPane(chatContent);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+
+        chatArea = chatContent;
+
+        userListPanel = new UserListPanel();
+
+        // JSplitPane setup with chat on the left and user list on the right
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, userListPanel);
+        splitPane.setResizeWeight(CHAT_SPLIT_PERCENT); // Allocate % space to the chat panel initially
+
+        this.add(splitPane, BorderLayout.CENTER);
+
+        JPanel input = new JPanel();
+        input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
+        input.setBorder(new EmptyBorder(5, 5, 5, 5)); // Add padding
+
+        textValue = new JTextField();
+        input.add(textValue);
+
+        button = new JButton("Send");
+        // Allows submission with the enter key instead of just the button click
+        textValue.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    button.doClick();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+
+        button.addActionListener((event) -> {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    String text = textValue.getText().trim();
+                    if (!text.isEmpty()) {
+                        LoggerUtil.INSTANCE.info("Preparing to send message: " + text);
+                        sendMessage(text); // Use the new sendMessage method
+                        addText(text); // Add the message locally
+                        textValue.setText(""); // Clear the original text
+                    }
+                } catch (NullPointerException e) {
+                    LoggerUtil.INSTANCE.severe("Error sending message", e);
+                }
+            });
+        });
+
+        input.add(button);
+
+        this.add(input, BorderLayout.SOUTH);
+
+        this.setName(CardView.CHAT.name());
+
+        chatArea.addContainerListener(new ContainerListener() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    if (chatArea.isVisible()) {
+                        chatArea.revalidate();
+                        chatArea.repaint();
+                    }
+                });
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    if (chatArea.isVisible()) {
+                        chatArea.revalidate();
+                        chatArea.repaint();
+                    }
+                });
+            }
+        });
+
+        // Add vertical glue to push messages to the top
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0; // Column index 0
+        gbc.gridy = GridBagConstraints.RELATIVE; // Automatically move to the next row
+        gbc.weighty = 1.0; // Give extra space vertically to this component
+        gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
+        chatArea.add(Box.createVerticalGlue(), gbc);
+
+        // Ensure editor panes resize when the scroll pane viewport changes
+        scroll.getViewport().addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resizeEditorPanes();
+            }
+        });
+    }
+
+    /**
+     * Adds a user to the user list.
+     * 
+     * @param clientId   The ID of the client.
+     * @param clientName The name of the client.
+     */
+    public void addUserListItem(long clientId, String clientName) {
+        SwingUtilities.invokeLater(() -> userListPanel.addUserListItem(clientId, clientName));
+    }
+
+    /**
+     * Removes a user from the user list.
+     * 
+     * @param clientId The ID of the client to be removed.
+     */
+    public void removeUserListItem(long clientId) {
+        SwingUtilities.invokeLater(() -> userListPanel.removeUserListItem(clientId));
+    }
+
+    /**
+     * Clears the user list.
+     */
+    public void clearUserList() {
+        SwingUtilities.invokeLater(() -> userListPanel.clearUserList());
+    }
+
+    /**
+     * Adds a message to the chat area.
+     * 
+     * @param text The text of the message.
+     */
+    // yh68 7/22/24
+    public void addText(String text) {
+        SwingUtilities.invokeLater(() -> {
+            JEditorPane textContainer = new JEditorPane("text/html", text); // Change to "text/html"
+            textContainer.setEditable(false);
+            textContainer.setBorder(BorderFactory.createEmptyBorder());
+            textContainer.setOpaque(false);
+            textContainer.setBackground(new Color(0, 0, 0, 0));
+
+            // GridBagConstraints settings for each message
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0; // Column index 0
+            gbc.gridy = GridBagConstraints.RELATIVE; // Automatically move to the next row
+            gbc.weightx = 1; // Let the component grow horizontally to fill the space
+            gbc.fill = GridBagConstraints.HORIZONTAL; // Fill horizontally
+            gbc.insets = new Insets(0, 0, 5, 0); // Add spacing between messages
+
+            chatArea.add(textContainer, gbc);
+            chatArea.revalidate();
+            chatArea.repaint();
+
+            // Scroll down on new message
+            JScrollPane parentScrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, chatArea);
+            if (parentScrollPane != null) {
+                SwingUtilities.invokeLater(() -> {
+                    JScrollBar vertical = parentScrollPane.getVerticalScrollBar();
+                    vertical.setValue(vertical.getMaximum());
+                });
+            }
+        });
+    }
+
+    public void onClientMute(String username, boolean isMuted) {
+        String action = isMuted ? "muted" : "unmuted";
+        addText(String.format("*%s has been %s*", username, action));
+    }
+
+    public void onClientUnmute(String username) {
+        addText(String.format("*%s has been unmuted*", username));
+    }
+
+    public void sendMessage(String text) {
+        try {
+            if (text.startsWith("@")) {
+                // Extract the message and username
+                String[] parts = text.split(" ", 2);
+                if (parts.length < 2) {
+                    JOptionPane.showMessageDialog(this, "Invalid private message format.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String username = parts[0].substring(1); // Remove '@'
+                String message = parts[1];
+    
+                // Send message directly if the server handles usernames
+                Client.INSTANCE.sendPrivateMessage(username, message);
+            } else {
+                // Handle normal message sending
+                Client.INSTANCE.sendMessage(text);
+            }
+        } catch (IOException e) {
+            LoggerUtil.INSTANCE.severe("Error sending message", e);
+        }
+    }
+
+    public void handleCommand(String command) {
+        if (command.startsWith("/mute") || command.startsWith("/unmute")) {
+            String[] parts = command.split(" ");
+            if (parts.length > 1) {
+                String targetUsername = parts[1];
+                try {
+                    if (command.startsWith("/mute")) {
+                        Client.INSTANCE.sendMute(targetUsername);
+                    } else {
+                        Client.INSTANCE.sendUnmute(targetUsername);
+                    }
+                } catch (IOException e) {
+                    LoggerUtil.INSTANCE.severe("Error sending mute/unmute command", e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No user specified.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            sendMessage(command);
+        }
+    }
+
+    private void resizeEditorPanes() {
+        int width = chatArea.getParent().getWidth();
+        for (Component comp : chatArea.getComponents()) {
+            if (comp instanceof JEditorPane) {
+                JEditorPane editorPane = (JEditorPane) comp;
+                editorPane.setSize(new Dimension(width, Integer.MAX_VALUE));
+                Dimension d = editorPane.getPreferredSize();
+                editorPane.setPreferredSize(new Dimension(width, d.height));
+            }
+        }
+        chatArea.revalidate();
+        chatArea.repaint();
+    }
+}
