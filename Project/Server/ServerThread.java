@@ -1,8 +1,18 @@
-package Project;
+package Project.Server;
 
+import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+
+import Project.Common.ConnectionPayload;
+import Project.Common.LoggerUtil;
+import Project.Common.Payload;
+import Project.Common.PayloadType;
+import Project.Common.RoomResultsPayload;
 
 /**
  * A server-side representation of a single client.
@@ -14,6 +24,8 @@ public class ServerThread extends BaseServerThread {
     private long clientId;
     private String clientName;
     private Consumer<ServerThread> onInitializationComplete; // callback to inform when this object is ready
+    private Set<String> mutedClients = ConcurrentHashMap.newKeySet();
+
 
     /**
      * Wraps the Socket connection and takes a Server reference and a callback
@@ -27,11 +39,9 @@ public class ServerThread extends BaseServerThread {
         Objects.requireNonNull(myClient, "Client socket cannot be null");
         Objects.requireNonNull(onInitializationComplete, "callback cannot be null");
         info("ServerThread created");
-        // get communication channels to single client
         this.client = myClient;
-        this.clientId = ServerThread.DEFAULT_CLIENT_ID;// this is updated later by the server
+        this.clientId = ServerThread.DEFAULT_CLIENT_ID; // this is updated later by the server
         this.onInitializationComplete = onInitializationComplete;
-
     }
 
     public void setClientName(String name) {
@@ -41,7 +51,8 @@ public class ServerThread extends BaseServerThread {
         this.clientName = name;
         onInitialized();
     }
-    public String getClientName(){
+
+    public String getClientName() {
         return clientName;
     }
 
@@ -67,7 +78,7 @@ public class ServerThread extends BaseServerThread {
 
     @Override
     protected void info(String message) {
-        System.out.println(String.format("ServerThread[%s(%s)]: %s", getClientName(), getClientId(), message));
+        LoggerUtil.INSTANCE.info(String.format("ServerThread[%s(%s)]: %s", getClientName(), getClientId(), message));
     }
 
     @Override
@@ -75,12 +86,12 @@ public class ServerThread extends BaseServerThread {
         currentRoom = null;
         super.cleanup();
     }
-    
+
     @Override
-    protected void disconnect(){
-        //sendDisconnect(clientId, clientName);
+    protected void disconnect() {
         super.disconnect();
     }
+
     // handle received message from the Client
     // yh68 7/5/2024
     @Override
@@ -91,7 +102,8 @@ public class ServerThread extends BaseServerThread {
                     ConnectionPayload cp = (ConnectionPayload) payload;
                     setClientName(cp.getClientName());
                     break;
-                case MESSAGE:
+                    case MESSAGE:
+                    info("Received message payload: " + payload.getMessage());
                     currentRoom.sendMessage(this, payload.getMessage());
                     break;
                 case ROOM_CREATE:
@@ -100,25 +112,114 @@ public class ServerThread extends BaseServerThread {
                 case ROOM_JOIN:
                     currentRoom.handleJoinRoom(this, payload.getMessage());
                     break;
+                case ROOM_LIST:
+                    currentRoom.handleListRooms(this, payload.getMessage());
+                    break;
                 case DISCONNECT:
                     currentRoom.disconnect(this);
                     break;
+<<<<<<< HEAD:Project/Server/ServerThread.java
+                    // yh68 7/22/24
+                case PRIVATE_MESSAGE:
+                    handlePrivateMessage(payload);
+                    break;
+                case MUTE:
+                    handleMute(payload);
+                    break;
+                case UNMUTE:
+                    handleUnmute(payload);
+=======
                 case ROLL:
                     currentRoom.sendMessage(this, payload.getMessage());
+>>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/ServerThread.java
                     break;
                 default:
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Could not process Payload: " + payload);
-            e.printStackTrace();
+            LoggerUtil.INSTANCE.severe("Could not process Payload: " + payload, e);
+        }
+    }
+// yh68 7/22/24
+    private void handleMute(Payload payload) {
+        long targetClientId = payload.getClientId();
+        if (currentRoom != null) {
+            ServerThread targetClient = currentRoom.getClientById(targetClientId);
+            if (targetClient != null) {
+                targetClient.addMutedClient(this); // Assuming addMutedClient method exists
+                sendConfirmation("Muted " + targetClient.getClientName());
+            } else {
+                sendConfirmation("Client not found.");
+            }
+        }
+    }
+    
+    private void handleUnmute(Payload payload) {
+        long targetClientId = payload.getClientId();
+        if (currentRoom != null) {
+            ServerThread targetClient = currentRoom.getClientById(targetClientId);
+            if (targetClient != null) {
+                targetClient.removeMutedClient(this); // Assuming removeMutedClient method exists
+                sendConfirmation("Unmuted " + targetClient.getClientName());
+            } else {
+                sendConfirmation("Client not found.");
+            }
+        }
+    }
+    
+    private void sendConfirmation(String message) {
+        Payload payload = new Payload();
+        payload.setPayloadType(PayloadType.MESSAGE);
+        payload.setMessage(message);
+        send(payload);
+    }
+
+
+    public void addMutedClient(ServerThread client) {
+        mutedClients.add(client.getClientName());
+    }
+
+    public void removeMutedClient(ServerThread client) {
+        mutedClients.remove(client.getClientName());
+    }
+
+    public boolean isMuted(String clientName) {
+        return mutedClients.contains(clientName);
+    }
+
+// yh68 7/22/24
+        private void handlePrivateMessage(Payload payload) throws IOException {
+        long targetClientId = payload.getClientId();
+        String message = payload.getMessage();
+    
+        if (currentRoom != null) {
+            ServerThread targetClient = currentRoom.getClientById(targetClientId);
+    
+            if (targetClient != null) {
+                // Send the message to the target client
+                targetClient.sendMessage(payload.getClientId(), message);
+    
+                // Send confirmation or echo message to the sender
+                sendMessage("Message sent to " + targetClientId + ": " + message);
+            } else {
+                // Notify the sender that the target client was not found
+                sendMessage("Error: Client with ID " + targetClientId + " not found.");
+            }
+        } else {
+            // Notify the sender that they're not in a room
+            sendMessage("Error: You are not in a room.");
         }
     }
     
 
-    // send methods to pass data back to the Client
+    // Send methods to pass data back to the client
+    public boolean sendRooms(List<String> rooms) {
+        RoomResultsPayload rrp = new RoomResultsPayload();
+        rrp.setRooms(rooms);
+        return send(rrp);
+    }
 
-    public boolean sendClientSync(long clientId, String clientName){
+    public boolean sendClientSync(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setClientId(clientId);
         cp.setClientName(clientName);
@@ -127,23 +228,10 @@ public class ServerThread extends BaseServerThread {
         return send(cp);
     }
 
-    /**
-     * Overload of sendMessage used for server-side generated messages
-     * 
-     * @param message
-     * @return @see {@link #send(Payload)}
-     */
     public boolean sendMessage(String message) {
         return sendMessage(ServerThread.DEFAULT_CLIENT_ID, message);
     }
 
-    /**
-     * Sends a message with the author/source identifier
-     * 
-     * @param senderId
-     * @param message
-     * @return @see {@link #send(Payload)}
-     */
     public boolean sendMessage(long senderId, String message) {
         Payload p = new Payload();
         p.setClientId(senderId);
@@ -152,25 +240,18 @@ public class ServerThread extends BaseServerThread {
         return send(p);
     }
 
-    /**
-     * Tells the client information about a client joining/leaving a room
-     * 
-     * @param clientId   their unique identifier
-     * @param clientName their name
-     * @param room       the room
-     * @param isJoin     true for join, false for leaivng
-     * @return success of sending the payload
-     */
     public boolean sendRoomAction(long clientId, String clientName, String room, boolean isJoin) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.ROOM_JOIN);
-        cp.setConnect(isJoin); //<-- determine if join or leave
+        cp.setConnect(isJoin);
         cp.setMessage(room);
         cp.setClientId(clientId);
         cp.setClientName(clientName);
         return send(cp);
     }
 
+<<<<<<< HEAD:Project/Server/ServerThread.java
+=======
     /**
      * Tells the client information about a disconnect (similar to leaving a room)
      * 
@@ -179,6 +260,7 @@ public class ServerThread extends BaseServerThread {
      * @return success of sending the payload
      */
     // yh68 6/23/2024
+>>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/ServerThread.java
     public boolean sendDisconnect(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.DISCONNECT);
@@ -188,12 +270,6 @@ public class ServerThread extends BaseServerThread {
         return send(cp);
     }
 
-    /**
-     * Sends (and sets) this client their id (typically when they first connect)
-     * 
-     * @param clientId
-     * @return success of sending the payload
-     */
     public boolean sendClientId(long clientId) {
         this.clientId = clientId;
         ConnectionPayload cp = new ConnectionPayload();
@@ -203,6 +279,4 @@ public class ServerThread extends BaseServerThread {
         cp.setClientName(clientName);
         return send(cp);
     }
-
-    // end send methods
 }

@@ -1,11 +1,11 @@
-package Project;
-
+package Project.Common;
 import java.io.Serializable;
 // yh68 7/5/24
 public class Payload implements Serializable {
     private PayloadType payloadType;
     private long clientId;
     private String message;
+    private String username;
 
     
 
@@ -25,6 +25,13 @@ public class Payload implements Serializable {
         return clientId;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 
 
     public void setClientId(long clientId) {
