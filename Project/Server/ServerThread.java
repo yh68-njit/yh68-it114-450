@@ -93,6 +93,7 @@ public class ServerThread extends BaseServerThread {
     }
 
     // handle received message from the Client
+    // yh68 7/5/2024
     @Override
     protected void processPayload(Payload payload) {
         try {
@@ -117,6 +118,7 @@ public class ServerThread extends BaseServerThread {
                 case DISCONNECT:
                     currentRoom.disconnect(this);
                     break;
+<<<<<<< HEAD:Project/Server/ServerThread.java
                     // yh68 7/22/24
                 case PRIVATE_MESSAGE:
                     handlePrivateMessage(payload);
@@ -126,6 +128,10 @@ public class ServerThread extends BaseServerThread {
                     break;
                 case UNMUTE:
                     handleUnmute(payload);
+=======
+                case ROLL:
+                    currentRoom.sendMessage(this, payload.getMessage());
+>>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/ServerThread.java
                     break;
                 default:
                     break;
@@ -204,6 +210,7 @@ public class ServerThread extends BaseServerThread {
             sendMessage("Error: You are not in a room.");
         }
     }
+    
 
     // Send methods to pass data back to the client
     public boolean sendRooms(List<String> rooms) {
@@ -243,6 +250,17 @@ public class ServerThread extends BaseServerThread {
         return send(cp);
     }
 
+<<<<<<< HEAD:Project/Server/ServerThread.java
+=======
+    /**
+     * Tells the client information about a disconnect (similar to leaving a room)
+     * 
+     * @param clientId   their unique identifier
+     * @param clientName their name
+     * @return success of sending the payload
+     */
+    // yh68 6/23/2024
+>>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/ServerThread.java
     public boolean sendDisconnect(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.DISCONNECT);

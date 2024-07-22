@@ -1,6 +1,6 @@
 package Project.Common;
 import java.io.Serializable;
-
+// yh68 7/5/24
 public class Payload implements Serializable {
     private PayloadType payloadType;
     private long clientId;
