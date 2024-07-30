@@ -34,4 +34,7 @@ public interface IConnectionEvents extends IClientEvents {
      * transition.
      */
     void onResetUserList();
+
+    void onUserMuteStatusChanged(long clientId, boolean isMuted);
+
 }
