@@ -3,7 +3,7 @@
 # Project: Chatroom
 
 ## Final Project
-[Video Link](https://www.youtube.com/watch?v=GfM7Fxl8GGs)
+[IT114 Final Demo: Chatroom](https://www.youtube.com/watch?v=GfM7Fxl8GGs)
 
 ### Milestone Submissions
 
