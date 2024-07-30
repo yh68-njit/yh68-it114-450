@@ -147,11 +147,22 @@ public class Room implements AutoCloseable {
     }
 
     protected synchronized void sendMessage(ServerThread sender, String message) {
-        if (!isRunning) { // block action if Room isn't running
+        if (!isRunning) {
             return;
         }
     
         long senderId = sender == null ? ServerThread.DEFAULT_CLIENT_ID : sender.getClientId();
+    
+        if (message.startsWith("/mute ") || message.startsWith("/unmute ")) {
+            // Handle mute/unmute command
+            String[] parts = message.split(" ", 2);
+            if (parts.length == 2) {
+                boolean isMute = message.startsWith("/mute ");
+                handleMuteUnmute(sender, parts[1], isMute);
+            }
+            return;  // Don't broadcast mute/unmute commands
+        }
+    
         final String formattedMessage = processMessageFormat(message);
     
         if (sender != null && sender.isClientMuted(sender.getClientName())) {
@@ -161,7 +172,6 @@ public class Room implements AutoCloseable {
     
         info(String.format("sending message to %s recipients", getName()));
         clientsInRoom.values().removeIf(client -> {
-            // Skip sending message if the sender is muted by the client or if the client is muted by the sender
             if ((sender != null && client.isClientMuted(sender.getClientName())) ||
                 (sender != null && sender.isClientMuted(client.getClientName()))) {
                 return false;
