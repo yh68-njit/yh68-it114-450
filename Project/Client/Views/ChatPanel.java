@@ -290,9 +290,14 @@ public class ChatPanel extends JPanel {
 
     public void sendMessage(String text) {
         try {
-            Client.INSTANCE.sendMessage(text);
+            if (text.startsWith("/mute ") || text.startsWith("/unmute ")) {
+                // Send the command to the server without displaying it in the chat area
+                Client.INSTANCE.sendMessage(text);
+            } else {
+                // For regular messages, send to server and display in chat area
+                Client.INSTANCE.sendMessage(text);
+            }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
