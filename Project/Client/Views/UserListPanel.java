@@ -153,4 +153,36 @@ public class UserListPanel extends JPanel implements IClientEvents {
             userListArea.repaint();
         });
     }
+
+    public void updateUserMuteStatus(long clientId, boolean isMuted) {
+        SwingUtilities.invokeLater(() -> {
+            UserListItem item = userItemsMap.get(clientId);
+            if (item != null) {
+                item.setMuted(isMuted);
+                userListArea.revalidate();
+                userListArea.repaint();
+            }
+        });
+    }
+    
+
+    public void highlightLastMessageSender(long clientId) {
+        LoggerUtil.INSTANCE.info("Highlighting last message sender: " + clientId);
+        SwingUtilities.invokeLater(() -> {
+            // Reset highlight for all users
+            for (UserListItem item : userItemsMap.values()) {
+                item.setHighlighted(false);
+            }
+            // Highlight the last message sender
+            UserListItem item = userItemsMap.get(clientId);
+            if (item != null) {
+                LoggerUtil.INSTANCE.info("Setting highlight for user with ID: " + clientId);
+                item.setHighlighted(true);
+            } else {
+                LoggerUtil.INSTANCE.warning("No UserListItem found for clientId: " + clientId);
+            }
+            userListArea.revalidate();
+            userListArea.repaint();
+        });
+    }    
 }

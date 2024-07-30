@@ -17,7 +17,8 @@ public abstract class TextFX {
         BLUE("\033[0;34m"),
         PURPLE("\033[0;35m"),
         CYAN("\033[0;36m"),
-        WHITE("\033[0;37m");
+        WHITE("\033[0;37m"),
+        GRAY("\033[1;30m");
 
         private final String code;
 

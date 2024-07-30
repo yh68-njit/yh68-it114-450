@@ -8,13 +8,15 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Project.Common.LoggerUtil;
+
 /**
  * UserListItem represents a user entry in the user list.
  */
 public class UserListItem extends JPanel {
     private JEditorPane textContainer;
-    private JPanel turnIndicator = new JPanel();
-    private JEditorPane energyPanel = new JEditorPane();
+    private boolean isMuted = false;
+    private boolean isHighlighted = false;
 
     /**
      * Constructor to create a UserListItem.
@@ -35,33 +37,47 @@ public class UserListItem extends JPanel {
         textContainer.setBackground(new Color(0, 0, 0, 0));
 
         this.setLayout(new BorderLayout());
-        turnIndicator.setPreferredSize(new Dimension(20, 20));
-        this.add(turnIndicator, BorderLayout.WEST);
         JPanel mid = new JPanel(new BorderLayout());
         mid.add(textContainer, BorderLayout.NORTH);
-        mid.add(energyPanel, BorderLayout.SOUTH);
         this.add(mid, BorderLayout.CENTER);
-        setEnergy(-1);
         // setPreferredSize(new Dimension(0,0));
     }
 
+    // yh68 7/29/24
+    public void setHighlighted(boolean highlighted) {
+        LoggerUtil.INSTANCE.info("setHighlighted called with " + highlighted + " for client ");
+        this.isHighlighted = highlighted;
+        updateAppearance();
+    }
+    
+    // yh68 7/29/24
+    public void setMuted(boolean muted) {
+        LoggerUtil.INSTANCE.info("setMuted called with " + muted + " for client ");
+        this.isMuted = muted;
+        updateAppearance();
+    }
+    
+    private void updateAppearance() {
+        LoggerUtil.INSTANCE.info("updateAppearance called. isMuted: " + isMuted + ", isHighlighted: " + isHighlighted);
+    
+        if (isMuted) {
+            textContainer.setForeground(Color.GRAY);
+        } else {
+            textContainer.setForeground(Color.BLACK);
+        }
+    
+        if (isHighlighted) {
+            this.setBackground(Color.YELLOW);
+        } else {
+            this.setBackground(null);
+        }
+    
+        this.revalidate();
+        this.repaint();
+    }
+    
+
     public String getClientName() {
         return textContainer.getText();
-    }
-
-    public void setCurrentTurn(boolean isMyTurn) {
-        turnIndicator.setBackground(isMyTurn ? Color.GREEN : new Color(0, 0, 0, 0));
-        repaint();
-    }
-
-    public void setEnergy(int energy) {
-        if (energy < 0) {
-            energyPanel.setText("0");
-            energyPanel.setVisible(false);
-        } else {
-            energyPanel.setText(energy + "");
-            energyPanel.setVisible(true);
-        }
-        repaint();
     }
 }

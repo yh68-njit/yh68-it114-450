@@ -1,10 +1,14 @@
 package Project.Server;
 
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Project.Common.FlipPayload;
 import Project.Common.LoggerUtil;
+import Project.Common.Payload;
+import Project.Common.RollPayload;
 
 public class Room implements AutoCloseable {
     private String name; // unique name of the Room
@@ -142,49 +146,26 @@ public class Room implements AutoCloseable {
         });
     }
 
-<<<<<<< HEAD:Project/Server/Room.java
-=======
-    /**
-     * Sends a basic String message from the sender to all connectedClients
-     * Internally calls processCommand and evaluates as necessary.
-     * Note: Clients that fail to receive a message get removed from
-     * connectedClients.
-     * Adding the synchronized keyword ensures that only one thread can execute
-     * these methods at a time,
-     * preventing concurrent modification issues and ensuring thread safety
-     * 
-     * @param message
-     * @param sender  ServerThread (client) sending the message or null if it's a
-     *                server-generated message
-     */
-    // yh68 7/5/24
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/Room.java
     protected synchronized void sendMessage(ServerThread sender, String message) {
         if (!isRunning) { // block action if Room isn't running
             return;
         }
-
+    
         long senderId = sender == null ? ServerThread.DEFAULT_CLIENT_ID : sender.getClientId();
-
         final String formattedMessage = processMessageFormat(message);
-
-<<<<<<< HEAD:Project/Server/Room.java
+    
+        if (sender != null && sender.isClientMuted(sender.getClientName())) {
+            LoggerUtil.INSTANCE.info("Message from " + sender.getClientName() + " was skipped due to being muted.");
+            return;
+        }
+    
         info(String.format("sending message to %s recipients", getName()));
         clientsInRoom.values().removeIf(client -> {
-            if (sender != null && sender.isMuted(client.getClientName())) {
-                // yh68 7/22/24
-                LoggerUtil.INSTANCE.info("Skipped sending message to muted client: " + client.getClientName());
-                return true;
+            // Skip sending message if the sender is muted by the client or if the client is muted by the sender
+            if ((sender != null && client.isClientMuted(sender.getClientName())) ||
+                (sender != null && sender.isClientMuted(client.getClientName()))) {
+                return false;
             }
-=======
-
-        // loop over clients and send out the message; remove client if message failed
-        // to be sent
-        // Note: this uses a lambda expression for each item in the values() collection,
-        // it's one way we can safely remove items during iteration
-        info(String.format("sending message to %s recipients", getName())); // <-- Remove this line to omit recipient count from logging
-        clientsInRoom.values().removeIf(client -> {
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/Room.java
             boolean failedToSend = !client.sendMessage(senderId, formattedMessage);
             if (failedToSend) {
                 info(String.format("Removing disconnected client[%s] from list", client.getClientId()));
@@ -193,15 +174,11 @@ public class Room implements AutoCloseable {
             return failedToSend;
         });
     }
-
-<<<<<<< HEAD:Project/Server/Room.java
+    
     public ServerThread getClientById(long clientId) {
         return clientsInRoom.get(clientId);
     }
 
-=======
-    //yh68 7/7/24
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/Room.java
     private String processMessageFormat(String message) {
         String boldPattern = "\\*\\*(.*?)\\*\\*";
         String italicPattern = "\\*(.*?)\\*";
@@ -209,13 +186,7 @@ public class Room implements AutoCloseable {
         String colorPattern = "#(r|g|b|[0-9a-fA-F]{6}) (.*?) \\1#";
 
         message = message.replaceAll(boldPattern, "<b>$1</b>");
-<<<<<<< HEAD:Project/Server/Room.java
         message = message.replaceAll(italicPattern, "<i>$1</i>");
-=======
-
-        message = message.replaceAll(italicPattern, "<i>$1</i>");
-
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/Room.java
         message = message.replaceAll(underlinePattern, "<u>$1</u>");
 
         Pattern pattern = Pattern.compile(colorPattern);
@@ -242,19 +213,61 @@ public class Room implements AutoCloseable {
             matcher.appendReplacement(sb, "<span style=\"color:" + colorTag + "\">" + coloredText + "</span>");
         }
         matcher.appendTail(sb);
-<<<<<<< HEAD:Project/Server/Room.java
         return sb.toString();
     }
 
-=======
-
-        return sb.toString();
+    public void sendPrivateMessage(long targetId, String message, ServerThread sender) throws IOException {
+        ServerThread targetClient = getClientById(targetId);
+    
+        if (targetClient != null) {
+            // Check if the sender is muted by the target client
+            if (targetClient.isClientMuted(sender.getClientName())) {
+                // Log the message skip and notify the sender
+                LoggerUtil.INSTANCE.info("Private message from " + sender.getClientName() + " to " + targetId + " was skipped due to being muted.");
+                sender.sendMessage("Private message to client ID " + targetId + " was skipped because you are muted by them.");
+            } else {
+                // Send the private message to the target client
+                targetClient.sendMessage("Private message from " + sender.getClientName() + ": " + message);
+                sender.sendMessage("Private message sent to client ID " + targetId);
+            }
+        } else {
+            // Notify the sender if the target client is not found
+            sender.sendMessage("User not found for private message.");
+        }
+    }
+    
+    // yh68 7/27/24
+    public boolean handleMuteUnmute(ServerThread sender, String targetClientName, boolean isMute) {
+        boolean changed = false;
+        if (isMute) {
+            changed = sender.addMutedClient(targetClientName);
+        } else {
+            changed = sender.removeMutedClient(targetClientName);
+        }
+        if (changed) {
+            LoggerUtil.INSTANCE.info("User " + sender.getClientId() + (isMute ? " muted " : " unmuted ") + targetClientName);
+        }
+        return changed;
     }
 
-    // end send data to client(s)
-    // yh68 6/23/2024
-    // receive data from ServerThread
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/Room.java
+    protected void handleRoll(ServerThread sender, RollPayload rp) {
+        int result = rp.rollDice();
+        String message;
+        if (rp.getNumberOfRolls() == 1) {
+            message = String.format("<i><font color='red'>%s rolled %d and got %d</font></i>", sender.getClientName(), rp.getDiceSides(), result);
+        } else {
+            message = String.format("<i><font color='red'>%s rolled %dd%d and got %d</font></i>", sender.getClientName(), rp.getNumberOfRolls(), rp.getDiceSides(), result);
+        }
+        sendMessage(sender, message);
+    }
+    
+    protected void handleFlip(ServerThread sender, FlipPayload fp) {
+        String result = fp.isHeads() ? "heads" : "tails";
+        String message = String.format("<i><font color='red'>%s flipped a coin and got %s</font></i>", sender.getClientName(), result);
+        sendMessage(sender, message);
+    }
+    
+
     protected void handleCreateRoom(ServerThread sender, String room) {
         if (Server.INSTANCE.createRoom(room)) {
             Server.INSTANCE.joinRoom(room, sender);

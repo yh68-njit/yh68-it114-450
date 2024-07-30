@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,14 +19,19 @@ import Project.Client.Interfaces.IConnectionEvents;
 import Project.Client.Interfaces.IClientEvents;
 import Project.Client.Interfaces.IMessageEvents;
 import Project.Client.Interfaces.IRoomEvents;
+import Project.Client.Views.ChatPanel;
 import Project.Common.ConnectionPayload;
+import Project.Common.Constants;
+import Project.Common.FlipPayload;
 import Project.Common.LoggerUtil;
 import Project.Common.Payload;
 import Project.Common.PayloadType;
+import Project.Common.PrivateMessagePayload;
 import Project.Common.RoomResultsPayload;
 import Project.Common.TextFX;
 import Project.Common.TextFX.Color;
 import Project.Common.RollPayload;
+import Project.Server.Room;
 
 /**
  * Demoing bi-directional communication between client and server in a
@@ -67,8 +71,8 @@ public enum Client {
     private final String LOGOFF = "logoff";
     private final String LOGOUT = "logout";
     private final String SINGLE_SPACE = " ";
-    private final Pattern rollSingle = Pattern.compile("/roll\\s+(\\d+)");
-    private final Pattern rollMulti = Pattern.compile("/roll\\s+(\\d+)d(\\d+)");
+    private final String FLIP = "flip";
+    private final String ROLL = "roll";
 
 
     // callback that updates the UI
@@ -173,220 +177,157 @@ public enum Client {
         return ipMatcher.matches() || localhostMatcher.matches();
     }
 
- /**
- * Controller for handling various text commands.
- * <p>
- * Add more here as needed
- * </p>
- * 
- * @param text
- * @return true if the text was a command or triggered a command
- * @throws IOException
- */
-private boolean processClientCommand(String text) throws IOException {
-    if (isConnection(text)) {
-        if (myData.getClientName() == null || myData.getClientName().isEmpty()) {
-            System.out.println(TextFX.colorize("Name must be set first via /name command", Color.RED));
+    /**
+     * Controller for handling various text commands.
+     * <p>
+     * Add more here as needed
+     * </p>
+     * 
+     * @param text
+     * @return true if the text was a command or triggered a command
+     * @throws IOException
+     */
+    private boolean processClientCommand(String text) throws IOException {
+        if (isConnection(text)) {
+            if (myData.getClientName() == null || myData.getClientName().isEmpty()) {
+                System.out.println(TextFX.colorize("Name must be set first via /name command", Color.RED));
+                return true;
+            }
+            // Parse connection details
+            String[] parts = text.trim().replaceAll(" +", " ").split(" ")[1].split(":");
+            connect(parts[0].trim(), Integer.parseInt(parts[1].trim()));
+            sendClientName();
             return true;
         }
-        // Parse connection details
-        String[] parts = text.trim().replaceAll(" +", " ").split(" ")[1].split(":");
-        connect(parts[0].trim(), Integer.parseInt(parts[1].trim()));
-        sendClientName();
-        return true;
-    } else if ("/quit".equalsIgnoreCase(text)) {
-        close();
-        return true;
-        // yh68 7/22/24
-    } else if (text.startsWith("@")) {
-        // Handle private message
-        String[] parts = text.substring(1).split(" ", 2);
-        if (parts.length < 2) {
-            JOptionPane.showMessageDialog(null, "Invalid private message format.", "Error", JOptionPane.ERROR_MESSAGE);
+        
+        if (text.startsWith("@")) {
+            int spaceIndex = text.indexOf(' ');
+            if (spaceIndex != -1) {
+                String targetName = text.substring(1, spaceIndex);
+                String privateMessage = text.substring(spaceIndex + 1);
+                Long targetId = findClientIdByName(targetName);
+                
+                if (targetId != null) {
+                    sendPrivateMessage(targetId, privateMessage);
+                } else {
+                    System.out.println("User not found: " + targetName);
+                }
+                return true;
+            }
+        }
+
+        if (text.startsWith("/mute ")) {
+            String targetName = text.substring(6);
+            long targetClientId = findClientIdByName(targetName);
+            if (targetClientId == -1L) {
+                System.out.println("User " + targetName + " not found.");
+            } else {
+                sendMuteUnmutePayload(targetClientId, true);
+            }
+        } else if (text.startsWith("/unmute ")) {
+            String targetName = text.substring(8);
+            long targetClientId = findClientIdByName(targetName);
+            if (targetClientId == -1L) {
+                System.out.println("User " + targetName + " not found.");
+            } else {
+                sendMuteUnmutePayload(targetClientId, false);
+            }
+
+        } else if ("/quit".equalsIgnoreCase(text)) {
+            close();
+            return true;
+        } else if (text.startsWith("/name")) {
+            myData.setClientName(text.replace("/name", "").trim());
+            System.out.println(TextFX.colorize("Set client name to " + myData.getClientName(), Color.CYAN));
+            return true;
+        } else if (text.equalsIgnoreCase("/users")) {
+            System.out.println(String.join("\n", knownClients.values().stream().map(c -> String.format("%s(%s)", c.getClientName(), c.getClientId())).toList()));
+            return true;
+        } else if (text.startsWith(COMMAND_CHARACTER)) {
+            // Handle commands prefixed with COMMAND_CHARACTER
+            String fullCommand = text.replace(COMMAND_CHARACTER, "");
+            String[] commandParts = fullCommand.split(SINGLE_SPACE, 2);
+            String command = commandParts[0];
+            String commandValue = commandParts.length >= 2 ? commandParts[1] : "";
+
+            switch (command) {
+                case CREATE_ROOM:
+                    sendCreateRoom(commandValue);
+                    break;
+                case JOIN_ROOM:
+                    sendJoinRoom(commandValue);
+                    break;
+                case LIST_ROOMS:
+                    sendListRooms(commandValue);
+                    break;
+                case ROLL:
+                    sendRoll(commandValue);
+                    return true;  // Add this line
+                case FLIP:
+                    sendFlip();
+                    break;
+                case DISCONNECT:
+                case LOGOFF:
+                case LOGOUT:
+                    sendDisconnect();
+                    break;
+                default:
+                    // Handle unknown commands if necessary
+                    break;
+            }
             return true;
         }
-        String username = parts[0];
-        String messageContent = parts[1];
-        try {
-            sendPrivateMessage(username, messageContent);
-        } catch (IOException e) {
-            LoggerUtil.INSTANCE.severe("Failed to send private message", e);
-        }
-        return true;
-    } else if (text.startsWith("/roll")) {
-        processRollCommand(text);
-        return true;
-    } else if (text.equalsIgnoreCase("/flip")) {
-        processFlipCommand();
-        return true;
-    } else if (text.startsWith("/name")) {
-        myData.setClientName(text.replace("/name", "").trim());
-        System.out.println(TextFX.colorize("Set client name to " + myData.getClientName(), Color.CYAN));
-        return true;
-    } else if (text.equalsIgnoreCase("/users")) {
-        System.out.println(String.join("\n", knownClients.values().stream().map(c -> String.format("%s(%s)", c.getClientName(), c.getClientId())).toList()));
-        return true;
-    } else if (text.startsWith("/mute")) {
-        String username = text.replace("/mute", "").trim();
-        try {
-            sendMute(username);
-        } catch (IOException e) {
-            LoggerUtil.INSTANCE.severe("Failed to send mute command", e);
-        }
-        return true;
-    } else if (text.startsWith("/unmute")) {
-        String username = text.replace("/unmute", "").trim();
-        try {
-            sendUnmute(username);
-        } catch (IOException e) {
-            LoggerUtil.INSTANCE.severe("Failed to send unmute command", e);
-        }
-        return true;
-    } else if (text.startsWith(COMMAND_CHARACTER)) {
-        // Handle commands prefixed with COMMAND_CHARACTER
-        String fullCommand = text.replace(COMMAND_CHARACTER, "");
-        String[] commandParts = fullCommand.split(SINGLE_SPACE, 2);
-        String command = commandParts[0];
-        String commandValue = commandParts.length >= 2 ? commandParts[1] : "";
-
-        switch (command) {
-            case CREATE_ROOM:
-                sendCreateRoom(commandValue);
-                break;
-            case JOIN_ROOM:
-                sendJoinRoom(commandValue);
-                break;
-            case LIST_ROOMS:
-                sendListRooms(commandValue);
-                break;
-            case DISCONNECT:
-            case LOGOFF:
-            case LOGOUT:
-                sendDisconnect();
-                break;
-            default:
-                // Handle unknown commands if necessary
-                break;
-        }
-        return true;
+        return false;
     }
-    return isRunning;
-}
-
-private void processPrivateMessage(Payload payload) {
-    try {
-        String text = payload.getMessage(); // Assuming message contains text in the format "@username message"
-        int spaceIndex = text.indexOf(' ');
-        if (spaceIndex == -1) {
-            System.out.println(TextFX.colorize("Invalid private message format", Color.RED));
-            return;
-        }
-        
-        String targetUsername = text.substring(1, spaceIndex).trim(); // Remove '@' and get the username
-        String messageContent = text.substring(spaceIndex + 1).trim(); // Get the message content
-        
-        // Construct and send the private message payload
-        Payload responsePayload = new Payload();
-        responsePayload.setPayloadType(PayloadType.PRIVATE_MESSAGE);
-        responsePayload.setUsername(targetUsername); // Use username instead of client ID
-        responsePayload.setMessage(messageContent);
-        send(responsePayload);
-    } catch (Exception e) {
-        System.out.println(TextFX.colorize("Error processing private message", Color.RED));
-        LoggerUtil.INSTANCE.severe("Error processing private message", e);
-    }
-}
-//yh68 7/22/24
-public void sendMute(String username) throws IOException {
-    Payload payload = new Payload();
-    payload.setPayloadType(PayloadType.MUTE);
-    payload.setUsername(username);
-    send(payload);
-}
-
-public void sendUnmute(String username) throws IOException {
-    Payload payload = new Payload();
-    payload.setPayloadType(PayloadType.UNMUTE);
-    payload.setUsername(username);
-    send(payload);
-}
-
-public void sendPrivateMessage(String username, String message) throws IOException {
-    Payload payload = new Payload();
-    payload.setPayloadType(PayloadType.PRIVATE_MESSAGE);
-    payload.setMessage(message);
-    payload.setUsername(username); // Add this field to your Payload class
-    send(payload);
-}
-
-// yh68 7/5/24
-private void processRollCommand(String text) throws IOException {
-    Matcher singleMatcher = rollSingle.matcher(text);
-    Matcher multiMatcher = rollMulti.matcher(text);
-
-    if (singleMatcher.matches()) {
-        int max = Integer.parseInt(singleMatcher.group(1));
-        sendRoll(1, max);
-    } else if (multiMatcher.matches()) {
-        int numberOfRolls = Integer.parseInt(multiMatcher.group(1));
-        int diceSides = Integer.parseInt(multiMatcher.group(2));
-        sendRoll(numberOfRolls, diceSides);
-    } else {
-        System.out.println("Invalid roll command format");
-    }
-}
-
-// yh68 7/22/24
-private void processFlipCommand() throws IOException {
-    String result = new Random().nextBoolean() ? "heads" : "tails";
-    String message = String.format("%s flipped a coin and got %s", myData.getClientName(), result);
-    System.out.println(message);
-    sendMessage(message);
-}
 
 // send methods to pass data to the ServerThread
 
-/**
- * Sends a roll command with specified number of rolls and dice sides
- * 
- * @param numberOfRolls
- * @param diceSides
- * @throws IOException 
- */
-private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
-    if (numberOfRolls <= 0 || diceSides <= 0) {
-        System.out.println("Invalid roll parameters");
-        return;
+    private void sendRoll(String rollCommand) throws IOException {
+        RollPayload rp;
+        if (rollCommand.contains("d")) {
+            String[] rollParts = rollCommand.split("d");
+            int numberOfRolls = Integer.parseInt(rollParts[0]);
+            int diceSides = Integer.parseInt(rollParts[1]);
+            rp = new RollPayload(numberOfRolls, diceSides);
+        } else {
+            int diceSides = Integer.parseInt(rollCommand);
+            rp = new RollPayload(1, diceSides);
+        }
+        send(rp);
     }
 
-    Random random = new Random();
-    String clientName = myData.getClientName();
-
-    if (numberOfRolls == 1) {
-        int result = random.nextInt(diceSides) + 1;
-        String message = String.format("%s rolled %d and got %d", clientName, diceSides, result);
-        System.out.println(message);
-        Payload p = new Payload();
-        p.setPayloadType(PayloadType.ROLL);
-        p.setMessage(message);
-        send(p);
-    } else {
-        RollPayload rollPayload = new RollPayload(numberOfRolls, diceSides);
-        rollPayload.setPayloadType(PayloadType.ROLL);
-        int result = rollPayload.rollDice();
-        String message = String.format("%s rolled %dd%d and got %d", clientName, numberOfRolls, diceSides, result);
-        System.out.println(message);
-        rollPayload.setMessage(message);
-        send(rollPayload);
+    private void sendFlip() throws IOException {
+        FlipPayload fp = new FlipPayload();
+        send(fp);
     }
-}
 
     public long getMyClientId() {
         return myData.getClientId();
     }
 
+    private Long findClientIdByName(String targetName) {
+        // Assuming there is a method or map to get client ID by name
+        for (ClientData cd : knownClients.values()) {
+            if (cd.getClientName().equals(targetName)) {
+                return cd.getClientId();
+            }
+        }
+        return null;
+    }
 
-    // send methods to pass data to the ServerThread
+        // send methods to pass data to the ServerThread
+
+    private void sendMuteUnmutePayload(long targetClientId, boolean isMute) throws IOException {
+        Payload payload = new Payload();
+        payload.setPayloadType(isMute ? PayloadType.MUTE : PayloadType.UNMUTE);
+        payload.setClientId(targetClientId);
+        send(payload);
+    }
+
+    private void sendPrivateMessage(Long targetId, String message) throws IOException {
+        out.writeObject(new PrivateMessagePayload(targetId, message));
+        out.flush();
+    }
 
     /**
      * Sends a search to the server-side to get a list of potentially matching Rooms
@@ -445,6 +386,9 @@ private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
      * @throws IOException
      */
     public void sendMessage(String message) throws IOException {
+        if (processClientCommand(message)) {
+            return; // If it's a command, we've handled it, so don't send as a regular message
+        }
         // Initialize the Payload object
         Payload payload = new Payload();
         payload.setPayloadType(PayloadType.MESSAGE); // Make sure PayloadType is correctly set
@@ -458,9 +402,6 @@ private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
         out.writeObject(payload);
         out.flush();
     }
-    
-    
-    
 
     /**
      * Sends chosen client name after socket handshake
@@ -643,8 +584,14 @@ private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
                 case PayloadType.MESSAGE: // displays a received message
                     processMessage(payload.getClientId(), payload.getMessage());
                     break;
-                case PRIVATE_MESSAGE:
-                    processPrivateMessage(payload);
+                case PayloadType.MUTE_UNMUTE_NOTIFICATION:
+                    processMessage(payload.getClientId(), payload.getMessage());
+                    break;
+                case PayloadType.MUTE:
+                    processMuteUnmute(payload.getClientId(), true);
+                    break;
+                case PayloadType.UNMUTE:
+                    processMuteUnmute(payload.getClientId(), false);
                     break;
                 default:
                     break;
@@ -653,7 +600,6 @@ private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
             LoggerUtil.INSTANCE.severe("Could not process Payload: " + payload, e);
         }
     }
-    
 
     /**
      * Returns the ClientName of a specific Client by ID.
@@ -672,6 +618,22 @@ private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
     }
 
     // payload processors
+
+    private void processMuteUnmute(long clientId, boolean isMuted) {
+        // Update the UI
+        events.forEach(event -> {
+            if (event instanceof ChatPanel) {
+                ((ChatPanel) event).updateUserMuteStatus(clientId, isMuted);
+            }
+            if (event instanceof IConnectionEvents) {
+                ((IConnectionEvents) event).onUserMuteStatusChanged(clientId, isMuted);
+            }
+        });
+        // Log the mute/unmute action
+        String action = isMuted ? "muted" : "unmuted";
+        String message = String.format("User %s has been %s", getClientNameFromId(clientId), action);
+        processMessage(ClientData.DEFAULT_CLIENT_ID, message);
+    }
 
     private void processRoomsList(List<String> rooms, String message) {
         // invoke onReceiveRoomList callback
@@ -722,10 +684,9 @@ private void sendRoll(int numberOfRolls, int diceSides) throws IOException {
             // knownClients.put(cp.getClientId(), myData);// <-- this is handled later
         }
     }
-
+    
     private void processMessage(long clientId, String message) {
-        String name = knownClients.containsKey(clientId) ? knownClients.get(clientId).getClientName() : "Room";
-        System.out.println(TextFX.colorize(String.format("%s: %s", name, message), Color.BLUE));
+        System.out.println(TextFX.colorize(message, Color.BLUE));
         // invoke onMessageReceive callback
         events.forEach(event -> {
             if (event instanceof IMessageEvents) {

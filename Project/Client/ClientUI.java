@@ -116,7 +116,7 @@ public class ClientUI extends JFrame implements IConnectionEvents, IMessageEvent
                 break;
             }
         }
-    }    
+    }
 
     @Override
     public void next() {
@@ -170,28 +170,24 @@ public class ClientUI extends JFrame implements IConnectionEvents, IMessageEvent
         }
     }
 
+    // yh68 7/27/24
     @Override
     public void onMessageReceive(long clientId, String message) {
         if (currentCard.ordinal() >= CardView.CHAT.ordinal()) {
             String clientName = Client.INSTANCE.getClientNameFromId(clientId);
-            if (clientId < ClientData.DEFAULT_CLIENT_ID) {
-                return;
-            }
-            String name = clientId == ClientData.DEFAULT_CLIENT_ID ? "Room"
-                    : String.format("%s[%s]", clientName, clientId);
-    
-            // Check if the message is a private message
-            if (message.startsWith("PRIVATE:")) {
-                // Handle private message differently
-                chatPanel.addText(String.format("(Private) %s: %s", name, message.substring(8))); // Remove "PRIVATE:" prefix
-            } else {
-                chatPanel.addText(String.format("%s: %s", name, message));
-            }
+            String formattedMessage = String.format("%s[%d]: %s", clientName, clientId, message);
+            chatPanel.addText(formattedMessage);
+            chatPanel.getUserListPanel().highlightLastMessageSender(clientId);
+        }
+    }
+
+    @Override
+    public void onUserMuteStatusChanged(long clientId, boolean isMuted) {
+        if (currentCard.ordinal() >= CardView.CHAT.ordinal()) {
+            chatPanel.getUserListPanel().updateUserMuteStatus(clientId, isMuted);
         }
     }
     
-    
-
     @Override
     public void onReceiveClientId(long id) {
         LoggerUtil.INSTANCE.fine("Received client id: " + id);

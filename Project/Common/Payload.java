@@ -6,14 +6,17 @@ public class Payload implements Serializable {
     private long clientId;
     private String message;
     private String username;
-
-    
+    private boolean isPrivate; // New field to indicate if the message is private
+    private long targetClientId;
+    private String clientName;
 
     public PayloadType getPayloadType() {
         return payloadType;
     }
 
-
+    public String getClientName() {
+        return clientName;
+    }
 
     public void setPayloadType(PayloadType payloadType) {
         this.payloadType = payloadType;
@@ -50,10 +53,25 @@ public class Payload implements Serializable {
         this.message = message;
     }
 
-
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+    
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+    
+    public long getTargetClientId() {
+        return targetClientId;
+    }
+    
+    public void setTargetClientId(long targetClientId) {
+        this.targetClientId = targetClientId;
+    }
 
     @Override
     public String toString(){
         return String.format("Payload[%s] Client Id [%s] Message: [%s]", getPayloadType(), getClientId(), getMessage());
     }
+    
 }

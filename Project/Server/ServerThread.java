@@ -1,18 +1,21 @@
 package Project.Server;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 import Project.Common.ConnectionPayload;
 import Project.Common.LoggerUtil;
 import Project.Common.Payload;
 import Project.Common.PayloadType;
+import Project.Common.PrivateMessagePayload;
 import Project.Common.RoomResultsPayload;
+import Project.Common.RollPayload;
+import Project.Common.FlipPayload;
 
 /**
  * A server-side representation of a single client.
@@ -24,8 +27,7 @@ public class ServerThread extends BaseServerThread {
     private long clientId;
     private String clientName;
     private Consumer<ServerThread> onInitializationComplete; // callback to inform when this object is ready
-    private Set<String> mutedClients = ConcurrentHashMap.newKeySet();
-
+    private Set<String> mutedClients = new HashSet<>();
 
     /**
      * Wraps the Socket connection and takes a Server reference and a callback
@@ -44,11 +46,32 @@ public class ServerThread extends BaseServerThread {
         this.onInitializationComplete = onInitializationComplete;
     }
 
+    public boolean addMutedClient(String clientName) {
+        boolean added = mutedClients.add(clientName);
+        if (added) {
+            saveMuteList();
+        }
+        return added;
+    }
+    
+    public boolean removeMutedClient(String clientName) {
+        boolean removed = mutedClients.remove(clientName);
+        if (removed) {
+            saveMuteList();
+        }
+        return removed;
+    }
+
+    public boolean isClientMuted(String clientName) {
+        return mutedClients.contains(clientName);
+    }
+
     public void setClientName(String name) {
         if (name == null) {
             throw new NullPointerException("Client name can't be null");
         }
         this.clientName = name;
+        loadMuteList();
         onInitialized();
     }
 
@@ -102,9 +125,17 @@ public class ServerThread extends BaseServerThread {
                     ConnectionPayload cp = (ConnectionPayload) payload;
                     setClientName(cp.getClientName());
                     break;
-                    case MESSAGE:
+                case MESSAGE:
                     info("Received message payload: " + payload.getMessage());
-                    currentRoom.sendMessage(this, payload.getMessage());
+                    if (!isClientMuted(payload.getClientName())) {
+                        currentRoom.sendMessage(this, payload.getMessage());
+                    } else {
+                        LoggerUtil.INSTANCE.info("Message from " + getClientName() + " was skipped due to being muted.");
+                    }
+                    break;
+                case PRIVATE_MESSAGE:
+                    PrivateMessagePayload pmp = (PrivateMessagePayload) payload;
+                    currentRoom.sendPrivateMessage(pmp.getTargetId(), pmp.getMessage(), this);
                     break;
                 case ROOM_CREATE:
                     currentRoom.handleCreateRoom(this, payload.getMessage());
@@ -118,20 +149,19 @@ public class ServerThread extends BaseServerThread {
                 case DISCONNECT:
                     currentRoom.disconnect(this);
                     break;
-<<<<<<< HEAD:Project/Server/ServerThread.java
-                    // yh68 7/22/24
-                case PRIVATE_MESSAGE:
-                    handlePrivateMessage(payload);
+                case ROLL:
+                    RollPayload rp = (RollPayload) payload;
+                    currentRoom.handleRoll(this, rp);
+                    break;
+                case FLIP:
+                    FlipPayload fp = (FlipPayload) payload;
+                    currentRoom.handleFlip(this, fp);
                     break;
                 case MUTE:
-                    handleMute(payload);
+                    handleMuteUnmute(payload.getClientId(), true);
                     break;
                 case UNMUTE:
-                    handleUnmute(payload);
-=======
-                case ROLL:
-                    currentRoom.sendMessage(this, payload.getMessage());
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/ServerThread.java
+                    handleMuteUnmute(payload.getClientId(), false);
                     break;
                 default:
                     break;
@@ -140,79 +170,28 @@ public class ServerThread extends BaseServerThread {
             LoggerUtil.INSTANCE.severe("Could not process Payload: " + payload, e);
         }
     }
-// yh68 7/22/24
-    private void handleMute(Payload payload) {
-        long targetClientId = payload.getClientId();
-        if (currentRoom != null) {
-            ServerThread targetClient = currentRoom.getClientById(targetClientId);
-            if (targetClient != null) {
-                targetClient.addMutedClient(this); // Assuming addMutedClient method exists
-                sendConfirmation("Muted " + targetClient.getClientName());
-            } else {
-                sendConfirmation("Client not found.");
-            }
-        }
-    }
-    
-    private void handleUnmute(Payload payload) {
-        long targetClientId = payload.getClientId();
-        if (currentRoom != null) {
-            ServerThread targetClient = currentRoom.getClientById(targetClientId);
-            if (targetClient != null) {
-                targetClient.removeMutedClient(this); // Assuming removeMutedClient method exists
-                sendConfirmation("Unmuted " + targetClient.getClientName());
-            } else {
-                sendConfirmation("Client not found.");
-            }
-        }
-    }
-    
-    private void sendConfirmation(String message) {
-        Payload payload = new Payload();
-        payload.setPayloadType(PayloadType.MESSAGE);
-        payload.setMessage(message);
-        send(payload);
-    }
-
-
-    public void addMutedClient(ServerThread client) {
-        mutedClients.add(client.getClientName());
-    }
-
-    public void removeMutedClient(ServerThread client) {
-        mutedClients.remove(client.getClientName());
-    }
-
-    public boolean isMuted(String clientName) {
-        return mutedClients.contains(clientName);
-    }
-
-// yh68 7/22/24
-        private void handlePrivateMessage(Payload payload) throws IOException {
-        long targetClientId = payload.getClientId();
-        String message = payload.getMessage();
-    
-        if (currentRoom != null) {
-            ServerThread targetClient = currentRoom.getClientById(targetClientId);
-    
-            if (targetClient != null) {
-                // Send the message to the target client
-                targetClient.sendMessage(payload.getClientId(), message);
-    
-                // Send confirmation or echo message to the sender
-                sendMessage("Message sent to " + targetClientId + ": " + message);
-            } else {
-                // Notify the sender that the target client was not found
-                sendMessage("Error: Client with ID " + targetClientId + " not found.");
-            }
-        } else {
-            // Notify the sender that they're not in a room
-            sendMessage("Error: You are not in a room.");
-        }
-    }
-    
 
     // Send methods to pass data back to the client
+
+    private void handleMuteUnmute(long targetClientId, boolean isMute) {
+        if (currentRoom != null) {
+            ServerThread targetClient = currentRoom.getClientById(targetClientId);
+            if (targetClient != null) {
+                String targetClientName = targetClient.getClientName();
+                boolean success = currentRoom.handleMuteUnmute(this, targetClientName, isMute);
+                if (success) {
+                    sendMessage("User " + targetClientName + (isMute ? " muted." : " unmuted."));
+                    // Send notification to the target client
+                    targetClient.sendMuteUnmuteNotification(this.getClientName(), isMute);
+                } else {
+                    sendMessage("User " + targetClientName + " not found or already in desired mute state.");
+                }
+            } else {
+                sendMessage("User " + targetClientId + " not found.");
+            }
+        }
+    }
+
     public boolean sendRooms(List<String> rooms) {
         RoomResultsPayload rrp = new RoomResultsPayload();
         rrp.setRooms(rooms);
@@ -250,17 +229,6 @@ public class ServerThread extends BaseServerThread {
         return send(cp);
     }
 
-<<<<<<< HEAD:Project/Server/ServerThread.java
-=======
-    /**
-     * Tells the client information about a disconnect (similar to leaving a room)
-     * 
-     * @param clientId   their unique identifier
-     * @param clientName their name
-     * @return success of sending the payload
-     */
-    // yh68 6/23/2024
->>>>>>> 038c00d28b3f646155a23cc23b069f69ddda3e59:Project/ServerThread.java
     public boolean sendDisconnect(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.DISCONNECT);
@@ -278,5 +246,45 @@ public class ServerThread extends BaseServerThread {
         cp.setClientId(clientId);
         cp.setClientName(clientName);
         return send(cp);
+    }
+
+    // yh68 7/27/24
+    private void saveMuteList() {
+        if (clientName == null) {
+            return;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(clientName + ".txt"))) {
+            for (String mutedClient : mutedClients) {
+                writer.write(mutedClient);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            LoggerUtil.INSTANCE.severe("Error saving mute list for " + clientName, e);
+        }
+    }
+
+    // yh68 7/27/24
+    private void loadMuteList() {
+        if (clientName == null) {
+            return;
+        }
+
+        mutedClients.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(clientName + ".txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                mutedClients.add(line);
+            }
+        } catch (IOException e) {
+            LoggerUtil.INSTANCE.severe("Error loading mute list for " + clientName, e);
+        }
+    }
+
+    public boolean sendMuteUnmuteNotification(String actorName, boolean isMute) {
+        Payload p = new Payload();
+        p.setPayloadType(PayloadType.MUTE_UNMUTE_NOTIFICATION);
+        p.setMessage(actorName + (isMute ? " muted" : " unmuted") + " you");
+        return send(p);
     }
 }
