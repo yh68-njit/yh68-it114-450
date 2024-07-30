@@ -13,7 +13,11 @@ import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -45,6 +49,7 @@ public class ChatPanel extends JPanel {
 
     private JTextField textValue;
     private JButton button;
+    private JButton exportButton;
 
     /**
      * Constructor to create the ChatPanel UI.
@@ -53,52 +58,50 @@ public class ChatPanel extends JPanel {
      */
     public ChatPanel(ICardControls controls) {
         super(new BorderLayout(10, 10));
-
+    
         JPanel chatContent = new JPanel(new GridBagLayout());
         chatContent.setAlignmentY(Component.TOP_ALIGNMENT);
-
+    
         // Wraps a viewport to provide scroll capabilities
         JScrollPane scroll = new JScrollPane(chatContent);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setBorder(BorderFactory.createEmptyBorder());
-
+    
         chatArea = chatContent;
-
+    
         userListPanel = new UserListPanel();
-
+    
         // JSplitPane setup with chat on the left and user list on the right
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, userListPanel);
         splitPane.setResizeWeight(CHAT_SPLIT_PERCENT); // Allocate % space to the chat panel initially
-
+    
         this.add(splitPane, BorderLayout.CENTER);
-
-        JPanel input = new JPanel();
-        input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
-        input.setBorder(new EmptyBorder(5, 5, 5, 5)); // Add padding
-
+    
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.X_AXIS));
+        inputPanel.setBorder(new EmptyBorder(5, 5, 5, 5)); // Add padding
+    
         textValue = new JTextField();
-        input.add(textValue);
-
+        inputPanel.add(textValue);
+    
         button = new JButton("Send");
         // Allows submission with the enter key instead of just the button click
         textValue.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
+            public void keyTyped(KeyEvent e) {}
+    
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     button.doClick();
                 }
             }
-
+    
             @Override
-            public void keyReleased(KeyEvent e) {
-            }
+            public void keyReleased(KeyEvent e) {}
         });
-
+    
         button.addActionListener((event) -> {
             SwingUtilities.invokeLater(() -> {
                 try {
@@ -106,7 +109,6 @@ public class ChatPanel extends JPanel {
                     if (!text.isEmpty()) {
                         LoggerUtil.INSTANCE.info("Preparing to send message: " + text);
                         sendMessage(text); // Use the new sendMessage method
-                        addText(text); // Add the message locally
                         textValue.setText(""); // Clear the original text
                     }
                 } catch (NullPointerException e) {
@@ -114,13 +116,23 @@ public class ChatPanel extends JPanel {
                 }
             });
         });
-
-        input.add(button);
-
-        this.add(input, BorderLayout.SOUTH);
-
+    
+        exportButton = new JButton("Export Chat");
+        exportButton.addActionListener(e -> exportChatHistory());
+    
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createHorizontalStrut(10)); // Add some space between buttons
+        buttonPanel.add(exportButton);
+    
+        // Add components to the input panel
+        inputPanel.add(buttonPanel);
+    
+        this.add(inputPanel, BorderLayout.SOUTH);
+    
         this.setName(CardView.CHAT.name());
-
+    
         chatArea.addContainerListener(new ContainerListener() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -131,7 +143,7 @@ public class ChatPanel extends JPanel {
                     }
                 });
             }
-
+    
             @Override
             public void componentRemoved(ContainerEvent e) {
                 SwingUtilities.invokeLater(() -> {
@@ -142,7 +154,7 @@ public class ChatPanel extends JPanel {
                 });
             }
         });
-
+    
         // Add vertical glue to push messages to the top
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // Column index 0
@@ -150,7 +162,7 @@ public class ChatPanel extends JPanel {
         gbc.weighty = 1.0; // Give extra space vertically to this component
         gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
         chatArea.add(Box.createVerticalGlue(), gbc);
-
+    
         // Ensure editor panes resize when the scroll pane viewport changes
         scroll.getViewport().addComponentListener(new ComponentAdapter() {
             @Override
@@ -208,6 +220,13 @@ public class ChatPanel extends JPanel {
             gbc.fill = GridBagConstraints.HORIZONTAL; // Fill horizontally
             gbc.insets = new Insets(0, 0, 5, 0); // Add spacing between messages
 
+            long clientId = extractClientIdFromMessage(text);
+            if (clientId != -1) {
+                LoggerUtil.INSTANCE.info("Highlighting last message sender: " + clientId);
+                userListPanel.highlightLastMessageSender(clientId);
+            } else {
+                LoggerUtil.INSTANCE.warning("Client ID extraction failed for message: " + text);
+            }
             chatArea.add(textContainer, gbc);
             chatArea.revalidate();
             chatArea.repaint();
@@ -223,57 +242,63 @@ public class ChatPanel extends JPanel {
         });
     }
 
-    public void onClientMute(String username, boolean isMuted) {
-        String action = isMuted ? "muted" : "unmuted";
-        addText(String.format("*%s has been %s*", username, action));
+    public UserListPanel getUserListPanel() {
+        return userListPanel;
     }
 
-    public void onClientUnmute(String username) {
-        addText(String.format("*%s has been unmuted*", username));
+    private long extractClientIdFromMessage(String message) {
+        int startIndex = message.indexOf('[');
+        int endIndex = message.indexOf(']');
+        if (startIndex != -1 && endIndex != -1) {
+            try {
+                return Long.parseLong(message.substring(startIndex + 1, endIndex));
+            } catch (NumberFormatException e) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    public void updateUserMuteStatus(long clientId, boolean isMuted) {
+        userListPanel.updateUserMuteStatus(clientId, isMuted);
+    }
+
+    // yh68 7/29/24
+    private void exportChatHistory() {
+        StringBuilder chatHistory = new StringBuilder();
+        
+        // Iterate through all components in chatArea
+        for (Component comp : chatArea.getComponents()) {
+            if (comp instanceof JEditorPane) {
+                JEditorPane editorPane = (JEditorPane) comp;
+                chatHistory.append(editorPane.getText()).append("\n");
+            }
+        }
+
+        // Generate unique filename with date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String fileName = "chat_history_" + dateFormat.format(new Date()) + ".txt";
+
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write(chatHistory.toString());
+            JOptionPane.showMessageDialog(this, "Chat history exported to " + fileName, "Export Successful", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error exporting chat history: " + ex.getMessage(), "Export Failed", JOptionPane.ERROR_MESSAGE);
+            LoggerUtil.INSTANCE.severe("Error exporting chat history", ex);
+        }
     }
 
     public void sendMessage(String text) {
         try {
-            if (text.startsWith("@")) {
-                // Extract the message and username
-                String[] parts = text.split(" ", 2);
-                if (parts.length < 2) {
-                    JOptionPane.showMessageDialog(this, "Invalid private message format.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                String username = parts[0].substring(1); // Remove '@'
-                String message = parts[1];
-    
-                // Send message directly if the server handles usernames
-                Client.INSTANCE.sendPrivateMessage(username, message);
+            if (text.startsWith("/mute ") || text.startsWith("/unmute ")) {
+                // Send the command to the server without displaying it in the chat area
+                Client.INSTANCE.sendMessage(text);
             } else {
-                // Handle normal message sending
+                // For regular messages, send to server and display in chat area
                 Client.INSTANCE.sendMessage(text);
             }
         } catch (IOException e) {
-            LoggerUtil.INSTANCE.severe("Error sending message", e);
-        }
-    }
-
-    public void handleCommand(String command) {
-        if (command.startsWith("/mute") || command.startsWith("/unmute")) {
-            String[] parts = command.split(" ");
-            if (parts.length > 1) {
-                String targetUsername = parts[1];
-                try {
-                    if (command.startsWith("/mute")) {
-                        Client.INSTANCE.sendMute(targetUsername);
-                    } else {
-                        Client.INSTANCE.sendUnmute(targetUsername);
-                    }
-                } catch (IOException e) {
-                    LoggerUtil.INSTANCE.severe("Error sending mute/unmute command", e);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "No user specified.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            sendMessage(command);
+            e.printStackTrace();
         }
     }
 

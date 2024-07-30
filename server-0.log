@@ -1,0 +1,726 @@
+07/30/2024 06:10:36 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server Starting
+07/30/2024 06:10:36 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Listening on port 3000
+07/30/2024 06:10:36 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: created
+07/30/2024 06:10:36 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Created new Room lobby
+07/30/2024 06:10:36 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:13:47 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:13:47 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:13:47 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:13:47 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:13:47 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:13:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:13:47 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Yousef[1] initialized*
+07/30/2024 06:13:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 1 recipients
+07/30/2024 06:13:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [1] Message: [lobby] Client Name [Yousef] Status [connect]
+07/30/2024 06:13:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yousef[1] joined the Room[lobby]
+07/30/2024 06:14:23 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:14:23 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:14:23 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:14:23 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:14:23 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Mohamad] Status [disconnect]
+07/30/2024 06:14:23 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [2] Message: [null] Client Name [Mohamad] Status [connect]
+07/30/2024 06:14:23 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Mohamad[2] initialized*
+07/30/2024 06:14:23 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 2 recipients
+07/30/2024 06:14:23 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [2] Message: [lobby] Client Name [Mohamad] Status [connect]
+07/30/2024 06:14:23 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [2] Message: [lobby] Client Name [Mohamad] Status [connect]
+07/30/2024 06:14:23 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:14:23 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Mohamad[2] joined the Room[lobby]
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:14:27 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 2 recipients
+07/30/2024 06:14:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [2] Message: [null] Client Name [Mohamad] Status [disconnect]
+07/30/2024 06:14:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [2] Message: [null] Client Name [Mohamad] Status [disconnect]
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Thread being disconnected by server
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() start
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() end
+07/30/2024 06:14:27 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 1
+07/30/2024 06:14:27 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Mohamad[2] disconnected
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() start
+07/30/2024 06:14:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() end
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:14:30 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 1 recipients
+07/30/2024 06:14:30 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [1] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Thread being disconnected by server
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() start
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() end
+07/30/2024 06:14:30 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 0
+07/30/2024 06:14:30 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yousef[1] disconnected
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() start
+07/30/2024 06:14:30 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() end
+07/30/2024 06:23:05 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server Starting
+07/30/2024 06:23:05 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Listening on port 3000
+07/30/2024 06:23:05 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: created
+07/30/2024 06:23:05 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Created new Room lobby
+07/30/2024 06:23:05 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:23:12 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:23:12 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:23:12 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:23:12 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:23:12 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Y] Status [disconnect]
+07/30/2024 06:23:12 [Project.Server.ServerThread] ([31mSEVERE[0m):
+[34m>[0m Error loading mute list for Y
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at Project.Server.ServerThread.loadMuteList(ServerThread.java:274)
+	at Project.Server.ServerThread.setClientName(ServerThread.java:74)
+	at Project.Server.ServerThread.processPayload(ServerThread.java:126)
+	at Project.Server.BaseServerThread.run(BaseServerThread.java:92)
+
+07/30/2024 06:23:12 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [1] Message: [null] Client Name [Y] Status [connect]
+07/30/2024 06:23:13 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Y[1] initialized*
+07/30/2024 06:23:13 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 1 recipients
+07/30/2024 06:23:13 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [1] Message: [lobby] Client Name [Y] Status [connect]
+07/30/2024 06:23:13 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Y[1] joined the Room[lobby]
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:23:19 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 1 recipients
+07/30/2024 06:23:19 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [1] Message: [null] Client Name [Y] Status [disconnect]
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: Thread being disconnected by server
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: ServerThread cleanup() start
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: ServerThread cleanup() end
+07/30/2024 06:23:19 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 0
+07/30/2024 06:23:19 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Y[1] disconnected
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: ServerThread cleanup() start
+07/30/2024 06:23:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Y(1)]: ServerThread cleanup() end
+07/30/2024 06:23:22 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m JVM is shutting down. Perform cleanup tasks.
+07/30/2024 06:26:00 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server Starting
+07/30/2024 06:26:00 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Listening on port 3000
+07/30/2024 06:26:00 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: created
+07/30/2024 06:26:00 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Created new Room lobby
+07/30/2024 06:26:00 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:28:07 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:28:07 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:28:07 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:28:07 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:28:08 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:28:08 [Project.Server.ServerThread] ([31mSEVERE[0m):
+[34m>[0m Error loading mute list for Yousef
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at Project.Server.ServerThread.loadMuteList(ServerThread.java:274)
+	at Project.Server.ServerThread.setClientName(ServerThread.java:74)
+	at Project.Server.ServerThread.processPayload(ServerThread.java:126)
+	at Project.Server.BaseServerThread.run(BaseServerThread.java:92)
+
+07/30/2024 06:28:08 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:28:08 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Yousef[1] initialized*
+07/30/2024 06:28:08 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 1 recipients
+07/30/2024 06:28:08 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [1] Message: [lobby] Client Name [Yousef] Status [connect]
+07/30/2024 06:28:08 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yousef[1] joined the Room[lobby]
+07/30/2024 06:29:07 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[ROOM_JOIN] Client Id [0] Message: [cool]
+07/30/2024 06:29:07 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [-1] Message: [Room cool doesn't exist]
+07/30/2024 06:29:31 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[ROOM_CREATE] Client Id [0] Message: [cool]
+07/30/2024 06:29:31 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: created
+07/30/2024 06:29:31 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Created new Room cool
+07/30/2024 06:29:31 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 1 recipients
+07/30/2024 06:29:31 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [1] Message: [lobby] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:29:31 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 0
+07/30/2024 06:29:31 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yousef[1] left the room
+07/30/2024 06:29:31 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: sending room status to 1 recipients
+07/30/2024 06:29:31 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [1] Message: [cool] Client Name [Yousef] Status [connect]
+07/30/2024 06:29:31 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: Yousef[1] joined the Room[cool]
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:29:52 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: sending disconnect status to 1 recipients
+07/30/2024 06:29:52 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [1] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Thread being disconnected by server
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() start
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() end
+07/30/2024 06:29:52 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 0
+07/30/2024 06:29:52 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: Yousef[1] disconnected
+07/30/2024 06:29:52 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server removed room cool
+07/30/2024 06:29:52 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: closed
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() start
+07/30/2024 06:29:52 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() end
+07/30/2024 06:33:49 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server Starting
+07/30/2024 06:33:49 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Listening on port 3000
+07/30/2024 06:33:49 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: created
+07/30/2024 06:33:49 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Created new Room lobby
+07/30/2024 06:33:49 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:35:45 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:35:45 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:35:45 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:35:45 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:35:45 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:35:45 [Project.Server.ServerThread] ([31mSEVERE[0m):
+[34m>[0m Error loading mute list for Yousef
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at Project.Server.ServerThread.loadMuteList(ServerThread.java:274)
+	at Project.Server.ServerThread.setClientName(ServerThread.java:74)
+	at Project.Server.ServerThread.processPayload(ServerThread.java:126)
+	at Project.Server.BaseServerThread.run(BaseServerThread.java:92)
+
+07/30/2024 06:35:45 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:35:45 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Yousef[1] initialized*
+07/30/2024 06:35:45 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 1 recipients
+07/30/2024 06:35:45 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [1] Message: [lobby] Client Name [Yousef] Status [connect]
+07/30/2024 06:35:45 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yousef[1] joined the Room[lobby]
+07/30/2024 06:35:55 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:35:55 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:35:55 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:35:55 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:35:55 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Mohamad] Status [disconnect]
+07/30/2024 06:35:55 [Project.Server.ServerThread] ([31mSEVERE[0m):
+[34m>[0m Error loading mute list for Mohamad
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at Project.Server.ServerThread.loadMuteList(ServerThread.java:274)
+	at Project.Server.ServerThread.setClientName(ServerThread.java:74)
+	at Project.Server.ServerThread.processPayload(ServerThread.java:126)
+	at Project.Server.BaseServerThread.run(BaseServerThread.java:92)
+
+07/30/2024 06:35:55 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [2] Message: [null] Client Name [Mohamad] Status [connect]
+07/30/2024 06:35:55 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Mohamad[2] initialized*
+07/30/2024 06:35:55 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 2 recipients
+07/30/2024 06:35:55 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [2] Message: [lobby] Client Name [Mohamad] Status [connect]
+07/30/2024 06:35:55 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [2] Message: [lobby] Client Name [Mohamad] Status [connect]
+07/30/2024 06:35:55 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:35:55 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Mohamad[2] joined the Room[lobby]
+07/30/2024 06:36:05 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:36:05 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:36:05 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:36:05 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:36:06 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:36:06 [Project.Server.ServerThread] ([31mSEVERE[0m):
+[34m>[0m Error loading mute list for Yahya
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at Project.Server.ServerThread.loadMuteList(ServerThread.java:274)
+	at Project.Server.ServerThread.setClientName(ServerThread.java:74)
+	at Project.Server.ServerThread.processPayload(ServerThread.java:126)
+	at Project.Server.BaseServerThread.run(BaseServerThread.java:92)
+
+07/30/2024 06:36:06 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [3] Message: [null] Client Name [Yahya] Status [connect]
+07/30/2024 06:36:06 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Yahya[3] initialized*
+07/30/2024 06:36:06 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 3 recipients
+07/30/2024 06:36:06 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:36:06 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:36:06 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:36:06 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:36:06 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [2] Message: [null] Client Name [Mohamad] Status [connect]
+07/30/2024 06:36:06 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yahya[3] joined the Room[lobby]
+07/30/2024 06:36:56 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[ROOM_JOIN] Client Id [0] Message: [cool]
+07/30/2024 06:36:56 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [-1] Message: [Room cool doesn't exist]
+07/30/2024 06:37:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[ROOM_LIST] Client Id [0] Message: [cool]
+07/30/2024 06:37:09 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_LIST] Client Id [0] Message: [null]
+07/30/2024 06:37:15 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[ROOM_CREATE] Client Id [0] Message: [cool]
+07/30/2024 06:37:15 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: created
+07/30/2024 06:37:15 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Created new Room cool
+07/30/2024 06:37:15 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 3 recipients
+07/30/2024 06:37:15 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:37:15 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:37:15 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:37:15 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 2
+07/30/2024 06:37:15 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yahya[3] left the room
+07/30/2024 06:37:15 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: sending room status to 1 recipients
+07/30/2024 06:37:15 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [cool] Client Name [Yahya] Status [connect]
+07/30/2024 06:37:15 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: Yahya[3] joined the Room[cool]
+07/30/2024 06:37:47 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[ROOM_JOIN] Client Id [0] Message: [lobby]
+07/30/2024 06:37:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: sending room status to 1 recipients
+07/30/2024 06:37:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [cool] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:37:47 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 0
+07/30/2024 06:37:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: Yahya[3] left the room
+07/30/2024 06:37:47 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server removed room cool
+07/30/2024 06:37:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[cool]: closed
+07/30/2024 06:37:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 3 recipients
+07/30/2024 06:37:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:37:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:37:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [3] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:37:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:37:47 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [2] Message: [null] Client Name [Mohamad] Status [connect]
+07/30/2024 06:37:47 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yahya[3] joined the Room[lobby]
+07/30/2024 06:38:11 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:38:11 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received message payload: Salam
+07/30/2024 06:38:11 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:38:11 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:38:11 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:38:11 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:38:35 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[MESSAGE] Client Id [1] Message: [***#g Salam g#***]
+07/30/2024 06:38:35 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received message payload: ***#g Salam g#***
+07/30/2024 06:38:35 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:38:35 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<b><i><span style="color:green">Salam</span></b></i>]
+07/30/2024 06:38:35 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<b><i><span style="color:green">Salam</span></b></i>]
+07/30/2024 06:38:35 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<b><i><span style="color:green">Salam</span></b></i>]
+07/30/2024 06:39:11 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[MESSAGE] Client Id [2] Message: [**_*#r Salam r#*_**]
+07/30/2024 06:39:11 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received message payload: **_*#r Salam r#*_**
+07/30/2024 06:39:11 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:39:11 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [<b><u><i><span style="color:red">Salam</span></i></u></b>]
+07/30/2024 06:39:11 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [<b><u><i><span style="color:red">Salam</span></i></u></b>]
+07/30/2024 06:39:11 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [<b><u><i><span style="color:red">Salam</span></i></u></b>]
+07/30/2024 06:39:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[ROLL] Client Id [0] Message: [null] Rolls [1] Dice Sides [6]
+07/30/2024 06:39:27 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:39:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [<i><font color='red'>Yahya rolled 6 and got 6</font></i>]
+07/30/2024 06:39:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [<i><font color='red'>Yahya rolled 6 and got 6</font></i>]
+07/30/2024 06:39:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [<i><font color='red'>Yahya rolled 6 and got 6</font></i>]
+07/30/2024 06:39:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[ROLL] Client Id [0] Message: [null] Rolls [2] Dice Sides [6]
+07/30/2024 06:39:40 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:39:40 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [<i><font color='red'>Mohamad rolled 2d6 and got 9</font></i>]
+07/30/2024 06:39:40 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [<i><font color='red'>Mohamad rolled 2d6 and got 9</font></i>]
+07/30/2024 06:39:40 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [<i><font color='red'>Mohamad rolled 2d6 and got 9</font></i>]
+07/30/2024 06:39:59 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[FLIP] Client Id [0] Message: [null] flipped a coin and got: heads
+07/30/2024 06:39:59 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:39:59 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<i><font color='red'>Yousef flipped a coin and got heads</font></i>]
+07/30/2024 06:39:59 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<i><font color='red'>Yousef flipped a coin and got heads</font></i>]
+07/30/2024 06:39:59 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<i><font color='red'>Yousef flipped a coin and got heads</font></i>]
+07/30/2024 06:40:21 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[PRIVATE_MESSAGE] Client Id [0] Message: [Salam bro]
+07/30/2024 06:40:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [-1] Message: [Private message from Yousef: Salam bro]
+07/30/2024 06:40:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [-1] Message: [Private message sent to client ID 3]
+07/30/2024 06:40:56 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[MUTE] Client Id [3] Message: [null]
+07/30/2024 06:40:56 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m User 2 muted Yahya
+07/30/2024 06:40:56 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [-1] Message: [User Yahya muted.]
+07/30/2024 06:40:56 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MUTE_UNMUTE_NOTIFICATION] Client Id [0] Message: [Mohamad muted you]
+07/30/2024 06:40:56 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[MESSAGE] Client Id [2] Message: [/mute Yahya]
+07/30/2024 06:40:56 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received message payload: /mute Yahya
+07/30/2024 06:41:12 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:41:12 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received message payload: Salam
+07/30/2024 06:41:12 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:41:12 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:41:12 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [3] Message: [Salam]
+07/30/2024 06:41:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:41:19 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received message payload: Salam
+07/30/2024 06:41:19 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:41:19 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:41:19 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:42:09 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 3 recipients
+07/30/2024 06:42:09 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [3] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:42:09 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [3] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:42:09 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [3] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Thread being disconnected by server
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: ServerThread cleanup() start
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: ServerThread cleanup() end
+07/30/2024 06:42:09 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 2
+07/30/2024 06:42:09 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yahya[3] disconnected
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: ServerThread cleanup() start
+07/30/2024 06:42:09 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(3)]: ServerThread cleanup() end
+07/30/2024 06:42:21 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Client connected
+07/30/2024 06:42:21 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(0)]: ServerThread created
+07/30/2024 06:42:21 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Waiting for next client
+07/30/2024 06:42:21 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Thread starting
+07/30/2024 06:42:21 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[null(-1)]: Received from my client: Payload[CLIENT_CONNECT] Client Id [0] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:42:21 [Project.Server.ServerThread] ([31mSEVERE[0m):
+[34m>[0m Error loading mute list for Yahya
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at Project.Server.ServerThread.loadMuteList(ServerThread.java:274)
+	at Project.Server.ServerThread.setClientName(ServerThread.java:74)
+	at Project.Server.ServerThread.processPayload(ServerThread.java:126)
+	at Project.Server.BaseServerThread.run(BaseServerThread.java:92)
+
+07/30/2024 06:42:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[CLIENT_ID] Client Id [4] Message: [null] Client Name [Yahya] Status [connect]
+07/30/2024 06:42:21 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m Server: *Yahya[4] initialized*
+07/30/2024 06:42:21 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending room status to 3 recipients
+07/30/2024 06:42:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [4] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:42:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [4] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:42:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[ROOM_JOIN] Client Id [4] Message: [lobby] Client Name [Yahya] Status [connect]
+07/30/2024 06:42:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [1] Message: [null] Client Name [Yousef] Status [connect]
+07/30/2024 06:42:21 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[SYNC_CLIENT] Client Id [2] Message: [null] Client Name [Mohamad] Status [connect]
+07/30/2024 06:42:21 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yahya[4] joined the Room[lobby]
+07/30/2024 06:42:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: Received from my client: Payload[MESSAGE] Client Id [4] Message: [Salam]
+07/30/2024 06:42:27 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: Received message payload: Salam
+07/30/2024 06:42:27 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:42:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [4] Message: [Salam]
+07/30/2024 06:42:27 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [4] Message: [Salam]
+07/30/2024 06:42:45 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[UNMUTE] Client Id [4] Message: [null]
+07/30/2024 06:42:45 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m User 2 unmuted Yahya
+07/30/2024 06:42:45 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [-1] Message: [User Yahya unmuted.]
+07/30/2024 06:42:45 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MUTE_UNMUTE_NOTIFICATION] Client Id [0] Message: [Mohamad unmuted you]
+07/30/2024 06:42:45 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[MESSAGE] Client Id [2] Message: [/unmute Yahya]
+07/30/2024 06:42:45 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received message payload: /unmute Yahya
+07/30/2024 06:42:53 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:42:53 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received message payload: Salam
+07/30/2024 06:42:53 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:42:53 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:42:53 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:42:53 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [2] Message: [Salam]
+07/30/2024 06:45:03 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[MESSAGE] Client Id [1] Message: [***#b Lastly b#***]
+07/30/2024 06:45:03 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received message payload: ***#b Lastly b#***
+07/30/2024 06:45:03 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending message to lobby recipients
+07/30/2024 06:45:03 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<b><i><span style="color:blue">Lastly</span></b></i>]
+07/30/2024 06:45:03 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<b><i><span style="color:blue">Lastly</span></b></i>]
+07/30/2024 06:45:03 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[MESSAGE] Client Id [1] Message: [<b><i><span style="color:blue">Lastly</span></b></i>]
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:45:40 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 3 recipients
+07/30/2024 06:45:40 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [1] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:45:40 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [1] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:45:40 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [1] Message: [null] Client Name [Yousef] Status [disconnect]
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Thread being disconnected by server
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() start
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() end
+07/30/2024 06:45:40 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 2
+07/30/2024 06:45:40 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yousef[1] disconnected
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() start
+07/30/2024 06:45:40 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yousef(1)]: ServerThread cleanup() end
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:45:43 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 2 recipients
+07/30/2024 06:45:43 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [4] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:45:43 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [4] Message: [null] Client Name [Yahya] Status [disconnect]
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: Thread being disconnected by server
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: ServerThread cleanup() start
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: ServerThread cleanup() end
+07/30/2024 06:45:43 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 1
+07/30/2024 06:45:43 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Yahya[4] disconnected
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: ServerThread cleanup() start
+07/30/2024 06:45:43 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Yahya(4)]: ServerThread cleanup() end
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Received from my client: Payload[DISCONNECT] Client Id [0] Message: [null]
+07/30/2024 06:45:46 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: sending disconnect status to 1 recipients
+07/30/2024 06:45:46 [Project.Server.BaseServerThread] ([32mINFO[0m):
+[34m>[0m Sending Payload: Payload[DISCONNECT] Client Id [2] Message: [null] Client Name [Mohamad] Status [disconnect]
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Thread being disconnected by server
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() start
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() end
+07/30/2024 06:45:46 [Project.Server.Room] ([34mFINE[0m):
+[34m>[0m Clients remaining in Room: 0
+07/30/2024 06:45:46 [Project.Server.Room] ([32mINFO[0m):
+[34m>[0m Room[lobby]: Mohamad[2] disconnected
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: Exited thread loop. Cleaning up connection
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() start
+07/30/2024 06:45:46 [Project.Server.ServerThread] ([32mINFO[0m):
+[34m>[0m ServerThread[Mohamad(2)]: ServerThread cleanup() end
+07/30/2024 06:45:55 [Project.Server.Server] ([32mINFO[0m):
+[34m>[0m JVM is shutting down. Perform cleanup tasks.
